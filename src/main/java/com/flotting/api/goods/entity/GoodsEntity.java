@@ -22,4 +22,8 @@ public class GoodsEntity extends BaseEntity {
     private Long price;
 
 
+    /**
+     * 남녀구분
+     */
+
 }

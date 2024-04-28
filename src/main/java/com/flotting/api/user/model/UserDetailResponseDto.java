@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -72,7 +72,7 @@ public class UserDetailResponseDto {
     private ManagerProfileDto manager;
 
     @Schema(description = "프로필 승인일자")
-    private LocalDate approvedAt;
+    private LocalDateTime approvedAt;
 
     @Schema(description = "매니저 코멘트")
     private String managerComment;

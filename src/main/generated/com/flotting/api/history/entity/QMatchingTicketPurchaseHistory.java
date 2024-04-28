@@ -24,17 +24,21 @@ public class QMatchingTicketPurchaseHistory extends EntityPathBase<MatchingTicke
 
     public final com.flotting.api.util.QBaseEntity _super = new com.flotting.api.util.QBaseEntity(this);
 
+    public final StringPath comment = createString("comment");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
-
-    public final com.flotting.api.goods.entity.QGoodsEntity goodsEntity;
 
     public final QMatchingHistory matchingHistory;
 
     public final DateTimePath<java.time.LocalDateTime> paidAt = createDateTime("paidAt", java.time.LocalDateTime.class);
 
+    public final StringPath price = createString("price");
+
     //inherited
     public final NumberPath<Long> seq = _super.seq;
+
+    public final StringPath ticketName = createString("ticketName");
 
     public final DateTimePath<java.time.LocalDateTime> usedAt = createDateTime("usedAt", java.time.LocalDateTime.class);
 
@@ -58,7 +62,6 @@ public class QMatchingTicketPurchaseHistory extends EntityPathBase<MatchingTicke
 
     public QMatchingTicketPurchaseHistory(Class<? extends MatchingTicketPurchaseHistory> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.goodsEntity = inits.isInitialized("goodsEntity") ? new com.flotting.api.goods.entity.QGoodsEntity(forProperty("goodsEntity")) : null;
         this.matchingHistory = inits.isInitialized("matchingHistory") ? new QMatchingHistory(forProperty("matchingHistory"), inits.get("matchingHistory")) : null;
         this.userSimpleEntity = inits.isInitialized("userSimpleEntity") ? new com.flotting.api.user.entity.QUserSimpleEntity(forProperty("userSimpleEntity"), inits.get("userSimpleEntity")) : null;
     }

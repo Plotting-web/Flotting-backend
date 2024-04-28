@@ -26,7 +26,7 @@ public class QUserDetailEntity extends EntityPathBase<UserDetailEntity> {
 
     public final EnumPath<com.flotting.api.user.enums.AppliedPathEnum> appliedPath = createEnum("appliedPath", com.flotting.api.user.enums.AppliedPathEnum.class);
 
-    public final DatePath<java.time.LocalDate> approvedAt = createDate("approvedAt", java.time.LocalDate.class);
+    public final DateTimePath<java.time.LocalDateTime> approvedAt = createDateTime("approvedAt", java.time.LocalDateTime.class);
 
     public final StringPath birthday = createString("birthday");
 

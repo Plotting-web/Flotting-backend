@@ -1,5 +1,9 @@
 package com.flotting.api.user.enums;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Arrays;
+
 public enum HobbyEnum {
 
     /**
@@ -17,7 +21,16 @@ public enum HobbyEnum {
     }
 
     public static HobbyEnum of(String name) {
+        if(StringUtils.isEmpty(name)) {
+            return HobbyEnum.ETC;
+        }
         return HobbyEnum.valueOf(name);
     }
 
+    public static HobbyEnum byValue(String data) {
+        return Arrays.stream(values())
+                .filter(value -> value.name.equals(data))
+                .findAny()
+                .orElse(null);
+    }
 }

@@ -6,9 +6,9 @@ import com.querydsl.core.annotations.QueryProjection;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -83,7 +83,7 @@ public class UserResponseDto implements ExcelDownloadable {
     private Long detailProfileId;
 
     @Schema(description = "승인일자")
-    private LocalDate approvedAt;
+    private LocalDateTime approvedAt;
 
     @Schema(description = "매니저 코멘트")
     private String managerComment;
@@ -139,19 +139,20 @@ public class UserResponseDto implements ExcelDownloadable {
         this.somethingWantToSay = detailInfo.getSomethingWantToSay();
         this.rejectedReason = detailInfo.getRejectedReason();
         this.userStatus = detailInfo.getUserStatus();
-        this.job = detailInfo.getJob().name();
+        this.job = Objects.nonNull(detailInfo.getJob()) ? detailInfo.getJob().name() : null;
     }
 
     @QueryProjection
     public UserResponseDto(Long userNo, String name, Integer age, String phoneNumber, UserStatusEnum userStatus,
-                           JobEnum job, Integer height, GenderEnum gender, LocationEnum location, String email,
-                           AppliedPathEnum appliedPath, String recommendUserName, List<HobbyEnum> hobby, String nickName,
+                           Object job, Integer height, GenderEnum gender, LocationEnum location, String email,
+                           AppliedPathEnum appliedPath, String recommendUserName, String nickName,
                            String detailJob, EducationEnum education, Boolean smoking, DrinkingEnum drinking,  GradeEnum grade, Long detailProfileId,
-                           LocalDate approvedAt, String managerComment, String mbti, List<CharacterEnum> character, String preferredDate, String lifeStyle, String somethingWantToSay,
-                           String birthday, List<String> profileImageURIs, String rejectedReason) {
+                           LocalDateTime approvedAt, String managerComment, String mbti,  String preferredDate, String lifeStyle, String somethingWantToSay,
+                           String birthday, String rejectedReason) {
         this.userNo = userNo;
         this.age = age;
-        this.job= job.name();
+//        this.job= job.name();
+        this.job= Objects.isNull(job) ? null : job.toString();
         this.userStatus = userStatus.name();
         this.phoneNumber = phoneNumber;
         this.name = name;
@@ -162,7 +163,7 @@ public class UserResponseDto implements ExcelDownloadable {
         this.email = email;
         this.grade = grade.name();
         this.height = height;
-        this.hobby = hobby.stream().map(HobbyEnum::name).collect(Collectors.toList());
+//        this.hobby = hobby.stream().map(HobbyEnum::name).collect(Collectors.toList());
         this.location = location.name();;
         this.nickName = nickName;
         this.gender = gender.name();;
@@ -172,7 +173,7 @@ public class UserResponseDto implements ExcelDownloadable {
         this.approvedAt = approvedAt;
         this.managerComment = managerComment;
         this.mbti = mbti;
-        this.character = character.stream().map(CharacterEnum::name).collect(Collectors.toList());;
+//        this.character = character.stream().map(CharacterEnum::name).collect(Collectors.toList());;
         this.lifeStyle = lifeStyle;
         this.preferredDate = preferredDate;
         this.somethingWantToSay = somethingWantToSay;
@@ -193,7 +194,7 @@ public class UserResponseDto implements ExcelDownloadable {
     public String[] getCellDatas() {
         String[] cellDatas = {
                 this.name, String.valueOf(this.age), this.phoneNumber, this.userStatus, this.job, String.valueOf(this.height), this.gender, this.location,
-                this.email, this.appliedPath, this.recommendUserName, this.hobby.toString(),
+                this.email, this.appliedPath, this.recommendUserName, Objects.nonNull(this.hobby) ? this.hobby.toString() : null,
                 this.nickName, this.detailJob, this.education, String.valueOf(this.smoking), this.drinking, this.grade
         };
         return cellDatas;

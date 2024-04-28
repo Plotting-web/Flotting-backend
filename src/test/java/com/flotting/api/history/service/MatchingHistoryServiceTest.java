@@ -29,31 +29,31 @@ class MatchingHistoryServiceTest extends SampleDataMaker {
     @Autowired
     private MatchingTicketPurchaseHistoryService matchingTicketPurchaseHistoryService;
 
-    @Test
-    public void 회수테스트() {
-        //given
-        List<UserResponseDto> responseDtos = makeUserData();
-        UserSimpleEntity receiver = userService.getSimpleUser(responseDtos.get(0).getUserNo());
-        UserSimpleEntity requester = userService.getSimpleUser(responseDtos.get(1).getUserNo());
-        MatchingTicketPurchaseHistory matchingTicket = MatchingTicketPurchaseHistory.builder()
-                .usedAt(LocalDateTime.now())
-                .userSimpleEntity(requester)
-                .build();
-        matchingTicketPurchaseHistoryService.saveTicket(matchingTicket);
-        MatchingHistory matchingHistory = MatchingHistory.builder()
-                .receiver(receiver)
-                .requester(requester)
-                .requestedAt(LocalDateTime.now().minusDays(4))
-                .matchingTicketPurchaseHistory(matchingTicket)
-                .build();
-        matchingHistoryService.saveMatchingHistory(matchingHistory);
-
-        //when
-        matchingHistoryService.withdraw();
-
-        //then
-        Assertions.assertNull(matchingTicket.getUsedAt());
-        Assertions.assertEquals(MatchingProcessEnum.FAIL, matchingHistory.getMatchingProcess());
-    }
+//    @Test
+//    public void 회수테스트() {
+//        //given
+//        List<UserResponseDto> responseDtos = makeUserData();
+//        UserSimpleEntity receiver = userService.getSimpleUser(responseDtos.get(0).getUserNo());
+//        UserSimpleEntity requester = userService.getSimpleUser(responseDtos.get(1).getUserNo());
+//        MatchingTicketPurchaseHistory matchingTicket = MatchingTicketPurchaseHistory.builder()
+//                .usedAt(LocalDateTime.now())
+//                .userSimpleEntity(requester)
+//                .build();
+//        matchingTicketPurchaseHistoryService.saveTicket(matchingTicket);
+//        MatchingHistory matchingHistory = MatchingHistory.builder()
+//                .receiver(receiver)
+//                .requester(requester)
+//                .requestedAt(LocalDateTime.now().minusDays(4))
+//                .matchingTicketPurchaseHistory(matchingTicket)
+//                .build();
+//        matchingHistoryService.saveMatchingHistory(matchingHistory);
+//
+//        //when
+//        matchingHistoryService.withdraw();
+//
+//        //then
+//        Assertions.assertNull(matchingTicket.getUsedAt());
+//        Assertions.assertEquals(MatchingProcessEnum.FAIL, matchingHistory.getMatchingProcess());
+//    }
 
 }

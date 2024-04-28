@@ -2,7 +2,7 @@ package com.flotting.api.user.model;
 
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -57,7 +57,7 @@ public class UserDetailRequestDto {
 
     private Long managerId;
 
-    private LocalDate approvedAt;
+    private LocalDateTime approvedAt;
 
     private String userStatus;
 
@@ -69,7 +69,7 @@ public class UserDetailRequestDto {
                                 Integer height, List<String> hobby, String URI, String location,
                                 List<String> character, String nickName, String preferredDate, List<String> profileImageURIs,
                                 String gender, Boolean smoking, String recommendUserName,
-                                String mbti, LocalDate approvedAt, String userStatus) {
+                                String mbti, LocalDateTime approvedAt, String userStatus) {
         this.appliedPath = path;
         this.detailJob = detailJob;
         this.lifeStyle = lifeStyle;

@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -132,7 +131,7 @@ public class AutoRecommendService {
             result.addAll(gradeDescData);
         }
 
-        boolean isSignedUpOverTwoWeeks = LocalDate.now().isAfter(targetDetailUser.getApprovedAt().plusWeeks(2));
+        boolean isSignedUpOverTwoWeeks = LocalDateTime.now().isAfter(targetDetailUser.getApprovedAt().plusWeeks(2));
 //        if(!isSignedUpOverTwoWeeks) {
 //            log.info("가입 2주 미만으로 2명 추가 쿼리 ");
 //            GradeEnum targetGrade = GradeEnum.getUpperGrade(targetDetailUser.getGrade());

@@ -23,8 +23,15 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
+    /**
+     * TODO : 서버 기동 될 떄, 샘플데이터 만들기 userStatus 별로 4개정도
+     * 결제이력 관리 GoodsEntity 주석 처리하곻 상품명 가격으로 관리
+     * 고객정보 검색할 때 filterRequestDto도 수정
+     * 결제이력관리 - 비고란 저장하는 api추가 필요
+     * 결제이력관리 - 입금확인 클릭하는 api추가 필요
+     * 결제이력관리 - 전체 정보 저장하는 api추가 필요
+     */
     private final UserService userService;
-
 
     @Operation(summary = "filter에 해당하는 user조회", description = "1,2차 프로필 정보 조회")
     @Parameter(name = "userFilterRequestDto", description = "requestParam : 성별, 체형, 신장, 휴면, 거주지, 나이, 등급, 직업, 흡연")
@@ -122,7 +129,6 @@ public class UserController {
     public List<PersonalRequesterResponseDto> getPersonalRequesterList(@PageableDefault(size = 15) Pageable pageable) {
         return userService.getPersonalRequesterList(pageable);
     }
-
 
     @GetMapping("/personal-requester/{userId}")
     public PersonalRequesterResponseDto getPersonalRequester(@PathVariable(name = "userId")Long requesterId) {

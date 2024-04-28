@@ -1,7 +1,7 @@
 package com.flotting.api.history.entity;
 
 
-import com.flotting.api.goods.entity.GoodsEntity;
+import com.flotting.api.history.model.MatchingTicketPurchaseHistoryDto;
 import com.flotting.api.user.entity.UserSimpleEntity;
 import com.flotting.api.util.BaseEntity;
 import jakarta.persistence.*;
@@ -34,17 +34,26 @@ public class MatchingTicketPurchaseHistory extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "matchingTicketPurchaseHistory")
     private MatchingHistory matchingHistory;
 
-    /**
-     * 결제 상품 id
-     */
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "goods_id")
-    private GoodsEntity goodsEntity;
+//    /**
+//     * 결제 상품 id
+//     */
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "goods_id")
+//    private GoodsEntity goodsEntity;
+
+    private String price;
+
+    private String ticketName;
 
     /**
      * 입금시각
      */
     private LocalDateTime paidAt;
+
+    /**
+     * 비고란
+     */
+    private String comment;
 
     public void withdraw() {
         this.usedAt = null;
@@ -55,5 +64,10 @@ public class MatchingTicketPurchaseHistory extends BaseEntity {
     public MatchingTicketPurchaseHistory (UserSimpleEntity userSimpleEntity, LocalDateTime usedAt) {
         this.userSimpleEntity = userSimpleEntity;
         this.usedAt = usedAt;
+    }
+
+    @Builder
+    public MatchingTicketPurchaseHistory (MatchingTicketPurchaseHistoryDto matchingTicketPurchaseHistoryDto) {
+
     }
 }

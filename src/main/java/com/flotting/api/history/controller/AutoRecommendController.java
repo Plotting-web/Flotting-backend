@@ -26,7 +26,7 @@ public class AutoRecommendController {
 
     @PostConstruct
     public void makeUserData() throws ParseException {
-//        sampleDataMaker.makeUserDataByCsv();
+        sampleDataMaker.makeUserData(false);
     }
 
     @GetMapping("/auto-recommend/download")

@@ -1,6 +1,7 @@
 package com.flotting.api.history.service;
 
 import com.flotting.api.history.entity.MatchingTicketPurchaseHistory;
+import com.flotting.api.history.model.MatchingTicketPurchaseHistoryDto;
 import com.flotting.api.history.repository.MatchingTicketPurchaseHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,8 @@ public class MatchingTicketPurchaseHistoryService {
     private final MatchingTicketPurchaseHistoryRepository matchingTicketPurchaseHistoryRepository;
 
     @Transactional
-    public void saveTicket(MatchingTicketPurchaseHistory matchingTicketPurchaseHistory) {
-       matchingTicketPurchaseHistoryRepository.save(matchingTicketPurchaseHistory);
+    public void saveTicket(MatchingTicketPurchaseHistoryDto matchingTicketPurchaseHistoryDto) {
+        MatchingTicketPurchaseHistory matchingTicketPurchaseHistory = new MatchingTicketPurchaseHistory(matchingTicketPurchaseHistoryDto);
+        matchingTicketPurchaseHistoryRepository.save(matchingTicketPurchaseHistory);
     }
 }

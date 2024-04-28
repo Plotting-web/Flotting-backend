@@ -1,5 +1,9 @@
 package com.flotting.api.user.enums;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Arrays;
+
 public enum CharacterEnum {
 
     /**
@@ -16,7 +20,17 @@ public enum CharacterEnum {
     }
 
     public static CharacterEnum of(String name) {
+        if(StringUtils.isEmpty(name)) {
+            return CharacterEnum.EXTROVERTED;
+        }
         return CharacterEnum.valueOf(name);
+    }
+
+    public static CharacterEnum byValue(String data) {
+        return Arrays.stream(values())
+                .filter(value -> value.name.equals(data))
+                .findAny()
+                .orElse(null);
     }
 
 }

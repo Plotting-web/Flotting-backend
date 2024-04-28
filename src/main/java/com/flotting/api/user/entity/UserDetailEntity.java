@@ -10,7 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -76,6 +76,7 @@ public class UserDetailEntity extends BaseEntity {
     @CollectionTable(name = "user_hobby_list",
         joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "hobby")
+    @Enumerated(value = EnumType.STRING)
     private List<HobbyEnum> hobby = new ArrayList<>();
 
     /**
@@ -121,6 +122,7 @@ public class UserDetailEntity extends BaseEntity {
     @ElementCollection
     @CollectionTable(name = "user_character_list",
             joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(value = EnumType.STRING)
     private List<CharacterEnum> character;
 
     /**
@@ -179,7 +181,7 @@ public class UserDetailEntity extends BaseEntity {
     /**
      * 승인일자
      */
-    private LocalDate approvedAt;
+    private LocalDateTime approvedAt;
 
     @Builder
     public UserDetailEntity(UserDetailRequestDto requestDto) {
@@ -204,6 +206,7 @@ public class UserDetailEntity extends BaseEntity {
         this.mbti = requestDto.getMbti();
         this.character = requestDto.getCharacter().stream().map(CharacterEnum::of).collect(Collectors.toList());
         this.preferredDate = requestDto.getPreferredDate();
+        this.userStatus = UserStatusEnum.of(requestDto.getUserStatus());
     }
 
     public UserDetailEntity updateInfo(UserDetailRequestDto requestDto) {
