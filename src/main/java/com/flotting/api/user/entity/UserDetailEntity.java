@@ -1,6 +1,8 @@
 package com.flotting.api.user.entity;
 
 import com.flotting.api.manager.entity.ManagerProfileEntity;
+import com.flotting.api.manager.model.ApproveRequestDto;
+import com.flotting.api.manager.model.RejectRequestDto;
 import com.flotting.api.user.enums.*;
 import com.flotting.api.user.model.UserDetailRequestDto;
 import com.flotting.api.util.BaseEntity;
@@ -183,6 +185,11 @@ public class UserDetailEntity extends BaseEntity {
      */
     private LocalDateTime approvedAt;
 
+    /**
+     * 출생연도 - 사용자들 나이 비교를 위해 필요
+     */
+    private Integer birthYear;
+
     @Builder
     public UserDetailEntity(UserDetailRequestDto requestDto) {
         this.birthday = requestDto.getBirthday();
@@ -192,7 +199,6 @@ public class UserDetailEntity extends BaseEntity {
         this.somethingWantToSay = requestDto.getSomethingWantToSay();
         this.drinking = DrinkingEnum.of(requestDto.getDrinking());
         this.education = EducationEnum.of(requestDto.getEducation());
-        this.grade = GradeEnum.of(requestDto.getGrade());
         this.height = requestDto.getHeight();
         this.hobby = requestDto.getHobby().stream().map(HobbyEnum::of).collect(Collectors.toList());
         this.identityVerificationURI = requestDto.getIdentityVerificationURI();
@@ -202,7 +208,6 @@ public class UserDetailEntity extends BaseEntity {
         this.gender = GenderEnum.of(requestDto.getGender());
         this.smoking = requestDto.getSmoking();
         this.recommendUserName = requestDto.getRecommendUserName();
-        this.approvedAt = requestDto.getApprovedAt();
         this.mbti = requestDto.getMbti();
         this.character = requestDto.getCharacter().stream().map(CharacterEnum::of).collect(Collectors.toList());
         this.preferredDate = requestDto.getPreferredDate();
@@ -215,7 +220,6 @@ public class UserDetailEntity extends BaseEntity {
         this.lifeStyle = requestDto.getLifeStyle();
         this.drinking = DrinkingEnum.of(requestDto.getDrinking());
         this.education = EducationEnum.of(requestDto.getEducation());
-        this.grade = GradeEnum.of(requestDto.getGrade());
         this.height = requestDto.getHeight();
         this.hobby = requestDto.getHobby().stream().map(HobbyEnum::of).collect(Collectors.toList());
         this.identityVerificationURI = requestDto.getIdentityVerificationURI();
@@ -231,15 +235,18 @@ public class UserDetailEntity extends BaseEntity {
         return this;
     }
 
-    public UserDetailEntity approveProfile(ManagerProfileEntity manager) {
+    public UserDetailEntity approveProfile(ApproveRequestDto approveRequestDto, ManagerProfileEntity manager) {
         this.userStatus = UserStatusEnum.NORMAL;
+        this.grade = GradeEnum.of(approveRequestDto.getGrade());
+        this.managerComment = approveRequestDto.getComment();
         this.manager = manager;
+        this.approvedAt = LocalDateTime.now();
         return this;
     }
 
-    public UserDetailEntity rejectProfile(ManagerProfileEntity manager, String reason) {
+    public UserDetailEntity rejectProfile(RejectRequestDto rejectRequestDto, ManagerProfileEntity manager) {
         this.userStatus = UserStatusEnum.INPROGRESS;
-        this.rejectedReason = reason;
+        this.rejectedReason = rejectRequestDto.getReason();
         this.manager = manager;
         return this;
     }

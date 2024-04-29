@@ -34,7 +34,7 @@ public class UserController {
     private final UserService userService;
 
     @Operation(summary = "filter에 해당하는 user조회", description = "1,2차 프로필 정보 조회")
-    @Parameter(name = "userFilterRequestDto", description = "requestParam : 성별, 체형, 신장, 휴면, 거주지, 나이, 등급, 직업, 흡연")
+    @Parameter(name = "userFilterRequestDto", description = "성별, 흡연여부, 회원상태, 등급, 거주지, 신청경로, 승인매니저id, 승인일자, 키, 나이")
     @ApiResponse(responseCode = "200", description = "user조회 성공", content = @Content(schema = @Schema(implementation = UserResponseDto.class)))
     @GetMapping("/filter")
     public List<UserResponseDto> getUsersByFilter( @RequestBody UserFilterRequestDto userFilterRequestDto,
@@ -73,12 +73,12 @@ public class UserController {
         return userService.getSimpleUserDto(userId);
     }
 
-    @Operation(summary = "2차 프로필 특정 user조회", description = "신장, 성별, 거주지, 이메일, 신청경로, 추천인 이름, 취향, 취향설명, 매력, 연애관, 취미, 닉네임, 체형, 직장명, 졸업이력, 흡연, 음주, 신원검증url, 등급, 승인매니저")
-    @ApiResponse(responseCode = "200", description = "user조회 성공", content = @Content(schema = @Schema(implementation = UserDetailResponseDto.class)))
-    @GetMapping("/detail-info/{userId}")
-    public UserDetailResponseDto getDetailUserInfo(
-                                               @PathVariable(name = "userId") Long userId) {
-        return userService.getDetailUserDto(userId);
+    @Operation(summary = "1,2차 프로필 특정 user조회", description = "1차&2차 프로필 조회")
+    @Parameter(name = "userId", description = "1차 프로필 userNo")
+    @ApiResponse(responseCode = "200", description = "user조회 성공", content = @Content(schema = @Schema(implementation = UserResponseDto.class)))
+    @GetMapping("/info/{userId}")
+    public UserResponseDto getUserInfo(@PathVariable(name = "userId") Long userId) {
+        return userService.getUserInfo(userId);
     }
 
     @Operation(summary = "1차 프로필 user등록", description = "1차 프로필 이름, 나이, 전화번호, 직업 신규등록")
@@ -90,8 +90,9 @@ public class UserController {
         return userService.saveSimpleUserInfo( userSimpleRequestDto);
     }
 
-    @Operation(summary = "2차 프로필 user등록", description = "2차 프로필 신장, 성별, 거주지, 이메일, 신청경로, 추천인 이름, 취향, 취향설명, 매력, 연애관, 취미, 닉네임, 체형, 직장명, 졸업이력, 흡연, 음주, 신원검증url, 등급 신규 등록")
+    @Operation(summary = "2차 프로필 user등록", description = "2차 프로필 등록")
     @Parameter(name = "userDetailRequestDto", description = "userDetailRequestDto : 2차 프로필 정보")
+    @Parameter(name = "userId", description = "1차 프로필 userNo")
     @ApiResponse(responseCode = "200", description = "user저장 성공", content = @Content(schema = @Schema(implementation = UserDetailResponseDto.class)))
     @PostMapping("/detail-info")
     public UserDetailResponseDto registerDetailUserInfo(

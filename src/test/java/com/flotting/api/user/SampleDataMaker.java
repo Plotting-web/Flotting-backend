@@ -13,7 +13,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -109,22 +108,22 @@ public class SampleDataMaker {
                 UserSimpleResponseDto userSimpleResponseDto = userService.saveSimpleUserInfo( simpleRequestDto);
 
                 UserDetailRequestDto detailRequestDto = UserDetailRequestDto.builder()
-                    .height(Integer.parseInt(array[2]))
-                    .smoking("Y".equals(array[20]) ? true : false)
-                    .detailJob(array[18])
-                    .drinking(DrinkingEnum.byValue(array[21]).name())
-                    .education(EducationEnum.byValue(array[19]).name())
-                    .email(array[16])
-                    .grade(GradeEnum.byValue(array[22]).name())
-                    .hobby(List.of(array[12]))
-                    .location(LocationEnum.byValue(array[4]).name())
-                    .nickName(array[16])
-                    .path(AppliedPathEnum.byValue(array[7]).name())
-                    .gender("여성".equals(array[3]) ? GenderEnum.F.name() : GenderEnum.M.name())
-                    .recommendUserName(array[8])
-                    .URI("")
-                    .approvedAt(LocalDateTime.parse(array[23] + " 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                    .build();
+                        .height(Integer.parseInt(array[2]))
+                        .smoking("Y".equals(array[20]) ? true : false)
+                        .detailJob(array[18])
+                        .drinking(DrinkingEnum.byValue(array[21]).name())
+                        .education(EducationEnum.byValue(array[19]).name())
+                        .email(array[16])
+                        .grade(GradeEnum.byValue(array[22]).name())
+                        .hobby(List.of(array[12]))
+                        .location(LocationEnum.byValue(array[4]).name())
+                        .nickName(array[16])
+                        .path(AppliedPathEnum.byValue(array[7]).name())
+                        .gender("여성".equals(array[3]) ? GenderEnum.F.name() : GenderEnum.M.name())
+                        .recommendUserName(array[8])
+                        .URI("")
+//                        .approvedAt(LocalDate.parse(array[23], DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                        .build();
                 UserDetailResponseDto userDetailResponseDto = userService.saveDetailUserInfo(userSimpleResponseDto.getUserNo(), detailRequestDto);
                 result.add(new UserResponseDto(userSimpleResponseDto, userDetailResponseDto));
             }

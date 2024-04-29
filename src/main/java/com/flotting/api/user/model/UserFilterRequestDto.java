@@ -2,6 +2,7 @@ package com.flotting.api.user.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.flotting.api.user.enums.*;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +45,7 @@ public class UserFilterRequestDto {
 
     @Schema(description = "키", example = "{min:150, max:200}")
     IntegerScopeModel height = new IntegerScopeModel();
-    @Schema(description = "나이", example = "{min:20, max:45}")
+    @Schema(description = "나이", example = "{min:1997, max:2005}")
     IntegerScopeModel age = new IntegerScopeModel();
 
     @Setter
@@ -136,7 +137,7 @@ public class UserFilterRequestDto {
     }
 
     public void setAge(IntegerScopeModel age) {
-        if(age.getMin() < 10 || age.getMax() > 60) {
+        if(age.getMin() < 1970 || age.getMax() > 2024) {
             log.error("Age must between(1970,2024) minVal: {} maxVal : {}", age.getMin(), age.getMax());
             throw new IllegalArgumentException("Age must between(1970,2024)");
         }

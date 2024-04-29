@@ -1,5 +1,8 @@
 package com.flotting.api.user.model;
 
+import com.flotting.api.manager.model.ManagerProfileDto;
+import com.flotting.api.user.entity.UserDetailEntity;
+import com.flotting.api.user.entity.UserSimpleEntity;
 import com.flotting.api.user.enums.*;
 import com.flotting.api.util.ExcelDownloadable;
 import com.querydsl.core.annotations.QueryProjection;
@@ -9,6 +12,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -16,21 +20,26 @@ import java.util.Objects;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class UserResponseDto implements ExcelDownloadable {
+public class UserResponseDto {
+//        implements ExcelDownloadable {
 
-    @Schema(description = "simpleProfileId")
+    @Schema(description = "1차 프로필 userId")
     private Long userNo;
 
-    @Schema(description = "이름")
+    @Schema(description = "2차 프로필 userId")
+    private Long detailProfileId;
+
+    @Schema(description = "이름", example = "PASS에서 넘겨준 정보")
     private String name;
 
-    @Schema(description = "나이")
+    @Schema(description = "나이", example = "PASS에서 넘겨준 정보")
     private Integer age;
 
-    @Schema(description = "전화번호")
+    @Schema(description = "전화번호", example = "PASS에서 넘겨준 정보")
     private String phoneNumber;
 
-    @Schema(description = "계정상태")
+    @Schema(description = "계정상태", allowableValues = { "NONE","INPROGRESS", "REJECT",
+            "WITHDRAWAL", "DORMANT", "NORMAL", "FORCED_WITHDRAWAL"})
     private String userStatus;
 
     @Schema(description = "직업", allowableValues = {"PROFESSIONAL", "MID_MAJOR_COMPANY", "FINANCE", "PUBLIC_COMPANY",
@@ -38,79 +47,90 @@ public class UserResponseDto implements ExcelDownloadable {
     })
     private String job;
 
-    @Schema(description = "신장")
+    @Schema(description = "신장", example = "187")
     private Integer height;
 
-    @Schema(description = "성별", allowableValues={"F", "M"})
+    @Schema(description = "성별", example = "M" , allowableValues={"F", "M"})
     private String gender;
 
-    @Schema(description = "거주지", allowableValues = {"SEOUL_NORTH", "SEOUL_SOUTH", "SEOUL_WEST", "SEOUL_EAST",
+    @Schema(description = "거주지", example = "SEOUL_NORTH", allowableValues = {"SEOUL_NORTH", "SEOUL_SOUTH", "SEOUL_WEST", "SEOUL_EAST",
             "GGYEONGGI_NORTH", "GGYEONGGI_SOUTH", "GGYEONGGI_WEST", "GGYEONGGI_EAST"
     })
     private String location;
 
-    @Schema(description = "이메일")
+    @Schema(description = "이메일", example = "aa@naver.com")
     private String email;
 
-    @Schema(description = "신청 경로", allowableValues = {"SMALL_CLASS_C", "SMALL_CLASS_M", "FRIP", "MOONTO", "INSTA", "RECOMMEND", "NAVER", "ETC", "PORTAL"})
+    @Schema(description = "신청 경로", example = "SMALL_CLASS_C",
+            allowableValues = {"SMALL_CLASS_C", "FRIP", "WADIZ", "NAVER_STORE", "RECOMMEND", "ETC"})
     private String appliedPath;
 
-    @Schema(description = "추천인 이름")
+    @Schema(description = "추천인 이름", example = "hong")
     private String recommendUserName;
 
-    @Schema(description = "취미")
+    @Schema(description = "취미", example = "EXERCISE" ,
+            allowableValues = {"EXERCISE", "SELF_IMPROVEMENT", "READING", "FOREIGN_LANGUAGE",
+                    "CAFE", "COOKING", "INSTRUMENT", "WALK", "ANIMAL", "TRAVEL", "FASHION", "FAMOUS_RESTAURANT",
+                    "MOVIE", "ETC"})
     private List<String> hobby;
 
-    @Schema(description = "닉네임")
+    @Schema(description = "닉네임", example = "star")
     private String nickName;
 
-    @Schema(description = "직장명")
+    @Schema(description = "상세직", example = "SK")
     private String detailJob;
 
-    @Schema(description = "졸업 이력", allowableValues = {"HIGH_SCHOOL_GRADUATION", "JUNIOR_COLLEGE_ATTENDING", "JUNIOR_COLLEGE_GRADUATION", "COLLEGE_ATTENDING", "COLLEGE_GRADUATION", "COLLEGE_ACADEMY_ATTENDING", "COLLEGE_ACADEMY_GRADUATION"})
+    @Schema(description = "졸업 이력", example = "HIGH_SCHOOL_GRADUATION",
+            allowableValues = {"HIGH_SCHOOL_GRADUATION", "JUNIOR_COLLEGE_ATTENDING", "JUNIOR_COLLEGE_GRADUATION", "COLLEGE_ATTENDING", "COLLEGE_GRADUATION", "COLLEGE_ACADEMY_ATTENDING", "COLLEGE_ACADEMY_GRADUATION"})
     private String education;
 
-    @Schema(description = "흡연 여부")
+    @Schema(description = "흡연 여부", example = "true")
     private Boolean smoking;
 
-    @Schema(description = "음주 빈도", allowableValues = {"THREE_WEEK", "TWO_WEEK", "ONE_WEEK", "ZERO_WEEK"})
+    @Schema(description = "음주 빈도", example = "THREE_WEEK",
+            allowableValues = {"THREE_WEEK", "TWO_WEEK", "ONE_WEEK", "ZERO_WEEK"})
     private String drinking;
 
-    @Schema(description = "등급", allowableValues = {"G", "D", "P"})
+    @Schema(description =  "신원 검증 image uri", example = "file://~")
+    private String identityVerificationURI;
+
+    @Schema(description = "등급", example = "G", allowableValues = {"G", "D", "P"})
     private String grade;
 
-    @Schema(description = "2차 프로필 id")
-    private Long detailProfileId;
+    @Schema(description = "프로필 승인한 매니저", example = "342")
+    private Long managerId;
 
-    @Schema(description = "승인일자")
-    private LocalDateTime approvedAt;
+    @Schema(description = "mbti", example = "isfp")
+    private String mbti;
 
     @Schema(description = "매니저 코멘트")
     private String managerComment;
 
-    @Schema(description = "mbti")
-    private String mbti;
-
-    @Schema(description = "내성격")
+    @Schema(description = "내성격", example = "EXTROVERTED",
+            allowableValues = {"EXTROVERTED", "CUTE", "HUMOROUS", "KING", "CALM", "POSITIVE", "INTELLIGENT", "UNIQUE",
+                    "PASSIONATE", "THOUGHTFUL", "SERIOUS", "SENSIBLE"})
     private List<String> character;
 
-    @Schema(description = "선호데이트")
+    @Schema(description = "선호데이트", example = "산책")
     private String preferredDate;
 
-    @Schema(description = "라이프스타일")
+    @Schema(description = "라이프스타일", example = "운동")
     private String lifeStyle;
 
-    @Schema(description = "하고싶은말")
+    @Schema(description = "하고싶은말", example = "잘부탁드립니다")
     private String somethingWantToSay;
 
-    @Schema(description = "생일")
+    @Schema(description = "생일", example = "970301")
     private String birthday;
 
-    @Schema(description = "사진경로")
+    @Schema(description = "사진경로", example = "file://~")
     private List<String> profileImageURIs;
 
     @Schema(description = "거절사유")
     private String rejectedReason;
+
+    @Schema(description = "승인일자", example = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime approvedAt;
 
     public UserResponseDto(UserSimpleResponseDto simpleInfo, UserDetailResponseDto detailInfo) {
         this.userNo = simpleInfo.getUserNo();
@@ -182,21 +202,58 @@ public class UserResponseDto implements ExcelDownloadable {
         this.rejectedReason = rejectedReason;
     }
 
+    public UserResponseDto(UserSimpleEntity userSimpleEntity, UserDetailEntity userDetailEntity) {
+        this.userNo = userSimpleEntity.getUserNo();
+        this.age = userSimpleEntity.getAge();
+        this.phoneNumber = userSimpleEntity.getPhoneNumber();
+        this.name = userSimpleEntity.getName();
+        this.email = userSimpleEntity.getEmail();
 
-    @Override
-    public String[] getHeaders() {
-        String[] headers = {"이름", "나이", "전화번호", "계정상태", "직업", "신장", "성별", "거주지", "이메일", "신청 경로", "추천인 이름",
-                "선호도1위", "선호 구체적 설명", "나의 매력", "나의 연애관", "취미", "닉네임", "체형", "직장명", "졸업 이력", "흡연 여부", "음주 빈도", "등급"};
-        return headers;
+        this.detailProfileId = userDetailEntity.getSeq();
+        this.appliedPath = userDetailEntity.getAppliedPath().name();
+        this.detailJob = userDetailEntity.getDetailJob();
+        this.drinking = userDetailEntity.getDrinking().name();
+        this.education = userDetailEntity.getEducation().name();
+        this.grade = userDetailEntity.getGrade().name();
+        this.height = userDetailEntity.getHeight();
+        this.hobby = userDetailEntity.getHobby().stream().map(HobbyEnum::name).collect(Collectors.toList());
+        this.identityVerificationURI = userDetailEntity.getIdentityVerificationURI();
+        this.location = userDetailEntity.getLocation().name();
+        this.nickName = userDetailEntity.getNickName();
+        this.gender = userDetailEntity.getGender().name();
+        this.smoking = userDetailEntity.getSmoking();
+        this.recommendUserName = userDetailEntity.getRecommendUserName();
+        this.managerId = userDetailEntity.getManager().getSeq();
+        this.approvedAt = userDetailEntity.getApprovedAt();
+        this.mbti = userDetailEntity.getMbti();
+        this.character = userDetailEntity.getCharacter().stream().map(CharacterEnum::name).collect(Collectors.toList());
+        this.preferredDate = userDetailEntity.getPreferredDate();
+        this.birthday = userDetailEntity.getBirthday();
+        this.managerComment = userDetailEntity.getManagerComment();
+        this.preferredDate= userDetailEntity.getPreferredDate();
+        this.lifeStyle = userDetailEntity.getLifeStyle();
+        this.somethingWantToSay = userDetailEntity.getSomethingWantToSay();
+        this.rejectedReason = userDetailEntity.getRejectedReason();
+        this.userStatus = Objects.nonNull(userDetailEntity.getUserStatus()) ? userDetailEntity.getUserStatus().name() : null;
+        this.job = Objects.nonNull(userDetailEntity.getJob()) ? userDetailEntity.getJob().name() : null;
     }
 
-    @Override
-    public String[] getCellDatas() {
-        String[] cellDatas = {
-                this.name, String.valueOf(this.age), this.phoneNumber, this.userStatus, this.job, String.valueOf(this.height), this.gender, this.location,
-                this.email, this.appliedPath, this.recommendUserName, Objects.nonNull(this.hobby) ? this.hobby.toString() : null,
-                this.nickName, this.detailJob, this.education, String.valueOf(this.smoking), this.drinking, this.grade
-        };
-        return cellDatas;
-    }
+
+    //Excel 다운로드 기
+//    @Override
+//    public String[] getHeaders() {
+//        String[] headers = {"이름", "나이", "전화번호", "계정상태", "직업", "신장", "성별", "거주지", "이메일", "신청 경로", "추천인 이름",
+//                "선호도1위", "선호 구체적 설명", "나의 매력", "나의 연애관", "취미", "닉네임", "체형", "직장명", "졸업 이력", "흡연 여부", "음주 빈도", "등급"};
+//        return headers;
+//    }
+//ho
+//    @Override
+//    public String[] getCellDatas() {
+//        String[] cellDatas = {
+//                this.name, String.valueOf(this.age), this.phoneNumber, this.userStatus, this.job, String.valueOf(this.height), this.gender, this.location,
+//                this.email, this.appliedPath, this.recommendUserName, Objects.nonNull(this.hobby) ? this.hobby.toString() : null,
+//                this.nickName, this.detailJob, this.education, String.valueOf(this.smoking), this.drinking, this.grade
+//        };
+//        return cellDatas;
+//    }
 }

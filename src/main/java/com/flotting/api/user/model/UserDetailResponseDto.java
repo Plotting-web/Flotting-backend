@@ -113,7 +113,7 @@ public class UserDetailResponseDto {
         this.detailJob = user.getDetailJob();
         this.drinking = user.getDrinking().name();
         this.education = user.getEducation().name();
-        this.grade = user.getGrade().name();
+        this.grade = Objects.nonNull(user.getGrade()) ? user.getGrade().name() : null;
         this.height = user.getHeight();
         this.hobby = user.getHobby().stream().map(HobbyEnum::name).collect(Collectors.toList());
         this.identityVerificationURI = user.getIdentityVerificationURI();

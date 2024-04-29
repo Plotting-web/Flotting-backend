@@ -30,6 +30,8 @@ public class QUserDetailEntity extends EntityPathBase<UserDetailEntity> {
 
     public final StringPath birthday = createString("birthday");
 
+    public final NumberPath<Integer> birthYear = createNumber("birthYear", Integer.class);
+
     public final ListPath<com.flotting.api.user.enums.CharacterEnum, EnumPath<com.flotting.api.user.enums.CharacterEnum>> character = this.<com.flotting.api.user.enums.CharacterEnum, EnumPath<com.flotting.api.user.enums.CharacterEnum>>createList("character", com.flotting.api.user.enums.CharacterEnum.class, EnumPath.class, PathInits.DIRECT2);
 
     //inherited

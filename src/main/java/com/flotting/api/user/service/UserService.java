@@ -161,9 +161,10 @@ public class UserService {
      * 2차 프로필 Dto 조회
      */
     @Transactional(readOnly = true)
-    public UserDetailResponseDto getDetailUserDto(Long profileId) {
-        UserDetailEntity userDetail = getDetailUser(profileId);
-        return new UserDetailResponseDto(userDetail);
+    public UserResponseDto getUserInfo(Long profileId) {
+        UserSimpleEntity userSimpleEntity = getSimpleUser(profileId);
+        UserDetailEntity userDetailEntity = userSimpleEntity.getUserDetailEntity();
+        return new UserResponseDto(userSimpleEntity, userDetailEntity);
     }
 
     @Transactional(readOnly = true)
