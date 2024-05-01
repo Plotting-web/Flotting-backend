@@ -35,10 +35,10 @@ public class UserDetailRequestDto {
     @Schema(description = "추천인 이름", example = "hong")
     private String recommendUserName;
 
-    @Schema(description = "취미", example = "EXERCISE" ,
+    @Schema(description = "취미", example = "[\"EXERCISE\"]" ,
             allowableValues = {"EXERCISE", "SELF_IMPROVEMENT", "READING", "FOREIGN_LANGUAGE",
             "CAFE", "COOKING", "INSTRUMENT", "WALK", "ANIMAL", "TRAVEL", "FASHION", "FAMOUS_RESTAURANT",
-            "MOVIE", "ETC"})
+            "MOVIE", "ETC", "MUSIC"})
     private List<String> hobby;
 
     @Schema(description = "닉네임", example = "star")
@@ -58,19 +58,13 @@ public class UserDetailRequestDto {
             allowableValues = {"THREE_WEEK", "TWO_WEEK", "ONE_WEEK", "ZERO_WEEK"})
     private String drinking;
 
-    @Schema(description =  "신원 검증 image uri", example = "file://~")
+    @Schema(description =  "신원 검증 image uri", example = "xcvbnm")
     private String identityVerificationURI;
-
-//    @Schema(description = "등급", example = "G", allowableValues = {"G", "D", "P"})
-//    private String grade;
-
-//    @Schema(description = "프로필 승인한 매니저", example = "342")
-//    private Long managerId;
 
     @Schema(description = "mbti", example = "isfp")
     private String mbti;
 
-    @Schema(description = "내성격", example = "EXTROVERTED",
+    @Schema(description = "내성격", example = "[\"EXTROVERTED\"]",
             allowableValues = {"EXTROVERTED", "CUTE", "HUMOROUS", "KING", "CALM", "POSITIVE", "INTELLIGENT", "UNIQUE",
             "PASSIONATE", "THOUGHTFUL", "SERIOUS", "SENSIBLE"})
     private List<String> character;
@@ -82,7 +76,7 @@ public class UserDetailRequestDto {
             allowableValues = {"PROFESSIONAL", "MID_MAJOR_COMPANY", "FINANCE", "PUBLIC_COMPANY",
             "EDU", "LAB", "MEDICAL", "BUSNINESS","SMALL_COMPANY", "FREELANCER", "STUDENT",
     })
-    private JobEnum job;
+    private String job;
 
     @Schema(description = "라이프스타일", example = "운동")
     private String lifeStyle;
@@ -93,7 +87,7 @@ public class UserDetailRequestDto {
     @Schema(description = "생일", example = "970301")
     private String birthday;
 
-    @Schema(description = "사진경로", example = "file://~")
+    @Schema(description = "사진경로", example = "[\"asdfgh\"]")
     private List<String> profileImageURIs;
 
     @Schema(description = "계정상태", example = "INPROGRESS",
@@ -103,7 +97,7 @@ public class UserDetailRequestDto {
 
     @Builder
     public UserDetailRequestDto(String path, String detailJob, String lifeStyle, String somethingWantToSay,
-                                String drinking, String education, String email, String grade,
+                                String drinking, String education, String email, String job,
                                 Integer height, List<String> hobby, String URI, String location,
                                 List<String> character, String nickName, String preferredDate, List<String> profileImageURIs,
                                 String gender, Boolean smoking, String recommendUserName,
@@ -131,6 +125,6 @@ public class UserDetailRequestDto {
         this.profileImageURIs = profileImageURIs;
 //        this.managerId = getManagerId();
         this.preferredDate = getPreferredDate();
-        this.job = getJob();
+        this.job = job;
     }
 }

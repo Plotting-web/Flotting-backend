@@ -112,10 +112,10 @@ public class UserService {
         UserDetailEntity savedUser = userDetailRepository.save(userDetailEntity);
         UserSimpleEntity simpleUser = getSimpleUser(targetUserId);
 
-        simpleUser.setDetailUser(userDetailEntity);
-        userDetailEntity.setSimpleUser(simpleUser);
+        simpleUser.setDetailUser(savedUser);
+        savedUser.setSimpleUser(simpleUser);
 
-        log.info("savedEntity user : {}", savedUser);
+        log.info("savedEntity simple user : {} detail user : {}", simpleUser.getUserNo(), savedUser.getSeq());
         return new UserDetailResponseDto(savedUser);
     }
 

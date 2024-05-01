@@ -54,7 +54,6 @@ class UserQueryDslImplTest extends SampleDataMaker {
                 .drinking(DrinkingEnum.ONE_WEEK.name())
                 .education(EducationEnum.COLLEGE_ACADEMY_ATTENDING.name())
                 .email("abc")
-                .grade(GradeEnum.D.name())
                 .hobby(List.of("abc"))
                 .location(LocationEnum.SEOUL_EAST.name())
                 .nickName("bing")

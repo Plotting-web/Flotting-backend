@@ -159,7 +159,7 @@ public class UserResponseDto {
         this.somethingWantToSay = detailInfo.getSomethingWantToSay();
         this.rejectedReason = detailInfo.getRejectedReason();
         this.userStatus = detailInfo.getUserStatus();
-        this.job = Objects.nonNull(detailInfo.getJob()) ? detailInfo.getJob().name() : null;
+        this.job = detailInfo.getJob();
     }
 
     @QueryProjection

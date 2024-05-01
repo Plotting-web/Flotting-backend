@@ -190,27 +190,35 @@ public class UserDetailEntity extends BaseEntity {
      */
     private Integer birthYear;
 
+    /**
+     * email
+     * @param requestDto
+     */
+    private String email;
+
     @Builder
     public UserDetailEntity(UserDetailRequestDto requestDto) {
-        this.birthday = requestDto.getBirthday();
-        this.appliedPath = AppliedPathEnum.of(requestDto.getAppliedPath());
-        this.detailJob = requestDto.getDetailJob();
-        this.lifeStyle = requestDto.getLifeStyle();
-        this.somethingWantToSay = requestDto.getSomethingWantToSay();
-        this.drinking = DrinkingEnum.of(requestDto.getDrinking());
-        this.education = EducationEnum.of(requestDto.getEducation());
         this.height = requestDto.getHeight();
-        this.hobby = requestDto.getHobby().stream().map(HobbyEnum::of).collect(Collectors.toList());
-        this.identityVerificationURI = requestDto.getIdentityVerificationURI();
-        this.profileImageURIs = requestDto.getProfileImageURIs();
-        this.location = LocationEnum.of(requestDto.getLocation());
-        this.nickName = requestDto.getNickName();
         this.gender = GenderEnum.of(requestDto.getGender());
-        this.smoking = requestDto.getSmoking();
+        this.location = LocationEnum.of(requestDto.getLocation());
+        this.email = requestDto.getEmail();
+        this.appliedPath = AppliedPathEnum.of(requestDto.getAppliedPath());
         this.recommendUserName = requestDto.getRecommendUserName();
+        this.hobby = requestDto.getHobby().stream().map(HobbyEnum::of).collect(Collectors.toList());
+        this.nickName = requestDto.getNickName();
+        this.detailJob = requestDto.getDetailJob();
+        this.education = EducationEnum.of(requestDto.getEducation());
+        this.smoking = requestDto.getSmoking();
+        this.drinking = DrinkingEnum.of(requestDto.getDrinking());
+        this.identityVerificationURI = requestDto.getIdentityVerificationURI();
         this.mbti = requestDto.getMbti();
         this.character = requestDto.getCharacter().stream().map(CharacterEnum::of).collect(Collectors.toList());
         this.preferredDate = requestDto.getPreferredDate();
+        this.job = JobEnum.of(requestDto.getJob());
+        this.lifeStyle = requestDto.getLifeStyle();
+        this.somethingWantToSay = requestDto.getSomethingWantToSay();
+        this.birthday = requestDto.getBirthday();
+        this.profileImageURIs = requestDto.getProfileImageURIs();
         this.userStatus = UserStatusEnum.of(requestDto.getUserStatus());
     }
 

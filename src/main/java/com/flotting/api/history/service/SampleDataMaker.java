@@ -71,7 +71,6 @@ public class SampleDataMaker {
                     .drinking(DrinkingEnum.byValue(array[21]).name())
                     .education(EducationEnum.byValue(array[19]).name())
                     .email(array[16])
-                    .grade(GradeEnum.byValue(array[22]).name())
                     .hobby(List.of("EXERCISE", "SELF_IMPROVEMENT", "READING"))
                     .location(LocationEnum.byValue(array[4]).name())
                     .nickName(array[16])
@@ -84,6 +83,7 @@ public class SampleDataMaker {
                     .character(List.of(CharacterEnum.byValue(array[24]).name()))
                     .preferredDate(array[25])
                     .userStatus(UserStatusEnum.byValue(array[26]).name())
+                    .job("PROFESSIONAL")
                     .build();
             UserDetailResponseDto userDetailResponseDto = userService.saveDetailUserInfo(userSimpleResponseDto.getUserNo(), detailRequestDto);
 
