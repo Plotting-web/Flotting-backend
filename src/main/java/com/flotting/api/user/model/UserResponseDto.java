@@ -42,9 +42,8 @@ public class UserResponseDto {
             "WITHDRAWAL", "DORMANT", "NORMAL", "FORCED_WITHDRAWAL"})
     private String userStatus;
 
-    @Schema(description = "직업", allowableValues = {"PROFESSIONAL", "MID_MAJOR_COMPANY", "FINANCE", "PUBLIC_COMPANY",
-            "EDU", "LAB", "MEDICAL", "BUSNINESS","SMALL_COMPANY", "FREELANCER", "STUDENT",
-    })
+    @Schema(description = "직업", allowableValues = {"PROFESSIONAL", "MID_MAJOR_COMPANY", "FINANCE", "PUBLIC_COMPANY", "EDU", "LAB", "MEDICAL",
+            "BUSNINESS", "SMALL_COMPANY", "FREELANCER", "STUDENT", "MAJOR_COMPANY", "MID_COMPANY", "MINOR_COMPANY", "STARTUP", "ETC"})
     private String job;
 
     @Schema(description = "신장", example = "187")
@@ -62,7 +61,7 @@ public class UserResponseDto {
     private String email;
 
     @Schema(description = "신청 경로", example = "SMALL_CLASS_C",
-            allowableValues = {"SMALL_CLASS_C", "FRIP", "WADIZ", "NAVER_STORE", "RECOMMEND", "ETC"})
+            allowableValues = {"SMALL_CLASS_C", "FRIP", "WADIZ", "NAVER", "RECOMMEND", "ETC", "SNS"})
     private String appliedPath;
 
     @Schema(description = "추천인 이름", example = "hong")
@@ -71,7 +70,7 @@ public class UserResponseDto {
     @Schema(description = "취미", example = "EXERCISE" ,
             allowableValues = {"EXERCISE", "SELF_IMPROVEMENT", "READING", "FOREIGN_LANGUAGE",
                     "CAFE", "COOKING", "INSTRUMENT", "WALK", "ANIMAL", "TRAVEL", "FASHION", "FAMOUS_RESTAURANT",
-                    "MOVIE", "ETC"})
+                    "MOVIE", "ETC", "MUSIC"})
     private List<String> hobby;
 
     @Schema(description = "닉네임", example = "star")
@@ -81,7 +80,7 @@ public class UserResponseDto {
     private String detailJob;
 
     @Schema(description = "졸업 이력", example = "HIGH_SCHOOL_GRADUATION",
-            allowableValues = {"HIGH_SCHOOL_GRADUATION", "JUNIOR_COLLEGE_ATTENDING", "JUNIOR_COLLEGE_GRADUATION", "COLLEGE_ATTENDING", "COLLEGE_GRADUATION", "COLLEGE_ACADEMY_ATTENDING", "COLLEGE_ACADEMY_GRADUATION"})
+            allowableValues = {"DOCTOR_INPROGRESS", "DOCTOR_COMPLETE","HIGH_SCHOOL_GRADUATION", "JUNIOR_COLLEGE_ATTENDING", "JUNIOR_COLLEGE_GRADUATION", "COLLEGE_ATTENDING", "COLLEGE_GRADUATION", "COLLEGE_ACADEMY_ATTENDING", "COLLEGE_ACADEMY_GRADUATION"})
     private String education;
 
     @Schema(description = "흡연 여부", example = "true")

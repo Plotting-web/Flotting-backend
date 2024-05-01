@@ -36,7 +36,7 @@ public class UserDetailResponseDto {
     private String email;
 
     @Schema(description = "신청 경로", example = "SMALL_CLASS_C",
-            allowableValues = {"SMALL_CLASS_C", "FRIP", "WADIZ", "NAVER_STORE", "RECOMMEND", "ETC"})
+            allowableValues = {"SMALL_CLASS_C", "FRIP", "WADIZ", "NAVER", "RECOMMEND", "ETC", "SNS"})
     private String appliedPath;
 
     @Schema(description = "추천인 이름", example = "hong")
@@ -55,7 +55,7 @@ public class UserDetailResponseDto {
     private String detailJob;
 
     @Schema(description = "졸업 이력", example = "HIGH_SCHOOL_GRADUATION",
-            allowableValues = {"HIGH_SCHOOL_GRADUATION", "JUNIOR_COLLEGE_ATTENDING", "JUNIOR_COLLEGE_GRADUATION", "COLLEGE_ATTENDING", "COLLEGE_GRADUATION", "COLLEGE_ACADEMY_ATTENDING", "COLLEGE_ACADEMY_GRADUATION"})
+            allowableValues = {"DOCTOR_INPROGRESS", "DOCTOR_COMPLETE","HIGH_SCHOOL_GRADUATION", "JUNIOR_COLLEGE_ATTENDING", "JUNIOR_COLLEGE_GRADUATION", "COLLEGE_ATTENDING", "COLLEGE_GRADUATION", "COLLEGE_ACADEMY_ATTENDING", "COLLEGE_ACADEMY_GRADUATION"})
     private String education;
 
     @Schema(description = "흡연 여부", example = "true")
@@ -80,9 +80,8 @@ public class UserDetailResponseDto {
     private String preferredDate;
 
     @Schema(description = "직업", example = "PROFESSIONAL",
-            allowableValues = {"PROFESSIONAL", "MID_MAJOR_COMPANY", "FINANCE", "PUBLIC_COMPANY",
-                    "EDU", "LAB", "MEDICAL", "BUSNINESS","SMALL_COMPANY", "FREELANCER", "STUDENT",
-            })
+            allowableValues = {"PROFESSIONAL", "MID_MAJOR_COMPANY", "FINANCE", "PUBLIC_COMPANY", "EDU", "LAB", "MEDICAL",
+                    "BUSNINESS", "SMALL_COMPANY", "FREELANCER", "STUDENT", "MAJOR_COMPANY", "MID_COMPANY", "MINOR_COMPANY", "STARTUP", "ETC"})
     private String job;
 
     @Schema(description = "라이프스타일", example = "운동")
