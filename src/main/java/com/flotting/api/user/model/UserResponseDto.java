@@ -130,6 +130,8 @@ public class UserResponseDto {
 
     @Schema(description = "승인일자", example = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime approvedAt;
+    @Schema(description = "상세주소")
+    private String detailLocation;
 
     public UserResponseDto(UserSimpleResponseDto simpleInfo, UserDetailResponseDto detailInfo) {
         this.userNo = simpleInfo.getUserNo();
@@ -209,23 +211,23 @@ public class UserResponseDto {
         this.email = userSimpleEntity.getEmail();
         if(Objects.nonNull(userDetailEntity)) {
             this.detailProfileId = userDetailEntity.getSeq();
-            this.appliedPath = userDetailEntity.getAppliedPath().name();
+            this.appliedPath = Objects.nonNull(userDetailEntity.getAppliedPath()) ? userDetailEntity.getAppliedPath().name() : null;
             this.detailJob = userDetailEntity.getDetailJob();
-            this.drinking = userDetailEntity.getDrinking().name();
-            this.education = userDetailEntity.getEducation().name();
-            this.grade = userDetailEntity.getGrade().name();
+            this.drinking = Objects.nonNull(userDetailEntity.getDrinking()) ? userDetailEntity.getDrinking().name() : null;
+            this.education = Objects.nonNull(userDetailEntity.getEducation()) ? userDetailEntity.getEducation().name() : null;
+            this.grade = Objects.nonNull(userDetailEntity.getGrade()) ? userDetailEntity.getGrade().name() : null;
             this.height = userDetailEntity.getHeight();
             this.hobby = userDetailEntity.getHobby().stream().map(HobbyEnum::name).collect(Collectors.toList());
             this.identityVerificationURI = userDetailEntity.getIdentityVerificationURI();
-            this.location = userDetailEntity.getLocation().name();
+            this.location = Objects.nonNull(userDetailEntity.getLocation()) ? userDetailEntity.getLocation().name() : null;
             this.nickName = userDetailEntity.getNickName();
-            this.gender = userDetailEntity.getGender().name();
+            this.gender = Objects.nonNull(userDetailEntity.getGender()) ? userDetailEntity.getGender().name() : null;
             this.smoking = userDetailEntity.getSmoking();
             this.recommendUserName = userDetailEntity.getRecommendUserName();
-            this.managerId = userDetailEntity.getManager().getSeq();
+            this.managerId = Objects.nonNull(userDetailEntity.getManager()) ? userDetailEntity.getManager().getSeq() : null;
             this.approvedAt = userDetailEntity.getApprovedAt();
             this.mbti = userDetailEntity.getMbti();
-            this.character = userDetailEntity.getCharacter().stream().map(CharacterEnum::name).collect(Collectors.toList());
+            this.character = Objects.nonNull(userDetailEntity.getCharacter()) ? userDetailEntity.getCharacter().stream().map(CharacterEnum::name).collect(Collectors.toList()) : null;
             this.preferredDate = userDetailEntity.getPreferredDate();
             this.birthday = userDetailEntity.getBirthday();
             this.managerComment = userDetailEntity.getManagerComment();

@@ -11,10 +11,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.parameters.P;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -167,7 +170,7 @@ public class UserDetailEntity extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     private UserStatusEnum userStatus;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "userDetailEntity", cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "userDetailEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserSimpleEntity userSimpleEntity;
 
     /**
@@ -192,9 +195,13 @@ public class UserDetailEntity extends BaseEntity {
 
     /**
      * email
-     * @param requestDto
      */
     private String email;
+
+    /**
+     * 상세주소
+     */
+    private String detailLocation;
 
     @Builder
     public UserDetailEntity(UserDetailRequestDto requestDto) {
@@ -219,7 +226,9 @@ public class UserDetailEntity extends BaseEntity {
         this.somethingWantToSay = requestDto.getSomethingWantToSay();
         this.birthday = requestDto.getBirthday();
         this.profileImageURIs = requestDto.getProfileImageURIs();
-        this.userStatus = UserStatusEnum.of(requestDto.getUserStatus());
+        this.userStatus = Objects.nonNull(requestDto.getUserStatus()) ? UserStatusEnum.of(requestDto.getUserStatus()) : UserStatusEnum.INPROGRESS;
+        this.detailLocation = requestDto.getDetailLocation();
+        this.birthYear = getBirthYear(requestDto.getBirthday());
     }
 
     public UserDetailEntity updateInfo(UserDetailRequestDto requestDto) {
@@ -240,6 +249,7 @@ public class UserDetailEntity extends BaseEntity {
         this.mbti = requestDto.getMbti();
         this.character = requestDto.getCharacter().stream().map(CharacterEnum::of).collect(Collectors.toList());
         this.preferredDate = requestDto.getPreferredDate();
+        this.detailLocation = requestDto.getDetailLocation();
         return this;
     }
 
@@ -263,4 +273,21 @@ public class UserDetailEntity extends BaseEntity {
         this.userSimpleEntity = simpleUser;
     }
 
+    public UserDetailEntity(UserStatusEnum statusEnum) {
+        this.userStatus = statusEnum;
+    }
+
+    private Integer getBirthYear(String birthday) {
+        if(StringUtils.isEmpty(birthday)) {
+            return  null;
+        }
+
+        Integer year = Integer.parseInt(birthday.substring(0, 1));
+        if(year >= 8) {
+            //80, 90년대 생
+            return Integer.parseInt("19".concat(birthday.substring(0, 2)));
+        } else {
+            return Integer.parseInt("20".concat(birthday.substring(0, 2)));
+        }
+    }
 }

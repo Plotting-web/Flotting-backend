@@ -39,6 +39,8 @@ public class QUserDetailEntity extends EntityPathBase<UserDetailEntity> {
 
     public final StringPath detailJob = createString("detailJob");
 
+    public final StringPath detailLocation = createString("detailLocation");
+
     public final EnumPath<com.flotting.api.user.enums.DrinkingEnum> drinking = createEnum("drinking", com.flotting.api.user.enums.DrinkingEnum.class);
 
     public final EnumPath<com.flotting.api.user.enums.EducationEnum> education = createEnum("education", com.flotting.api.user.enums.EducationEnum.class);

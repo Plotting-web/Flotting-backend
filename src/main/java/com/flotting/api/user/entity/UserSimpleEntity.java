@@ -82,6 +82,7 @@ public class UserSimpleEntity implements UserDetails {
 
     public void setDetailUser(UserDetailEntity detailProfile) {
         this.userDetailEntity = detailProfile;
+        detailProfile.setSimpleUser(this);
     }
 
     public UserSimpleEntity updateInfo(UserSimpleRequestDto requestDto) {

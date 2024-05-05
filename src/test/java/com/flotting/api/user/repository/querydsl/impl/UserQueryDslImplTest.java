@@ -63,10 +63,10 @@ class UserQueryDslImplTest extends SampleDataMaker {
                 .URI("uri").build();
 
         //when
-        UserDetailResponseDto userDetailResponseDto = userService.saveDetailUserInfo(userSimpleResponseDto.getUserNo(), requestDto);
+        UserResponseDto userResponseDto = userService.saveDetailUserInfo(userSimpleResponseDto.getUserNo(), requestDto);
 
         //then
-        Assertions.assertThat(userDetailResponseDto).isNotNull();
+        Assertions.assertThat(userResponseDto).isNotNull();
     }
 
     @Test

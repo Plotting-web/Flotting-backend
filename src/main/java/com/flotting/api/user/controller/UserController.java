@@ -95,7 +95,7 @@ public class UserController {
     @Parameter(name = "userId", description = "1차 프로필 userNo")
     @ApiResponse(responseCode = "200", description = "user저장 성공", content = @Content(schema = @Schema(implementation = UserDetailResponseDto.class)))
     @PostMapping("/detail-info")
-    public UserDetailResponseDto registerDetailUserInfo(
+    public UserResponseDto registerDetailUserInfo(
                                                         @RequestBody UserDetailRequestDto userDetailRequestDto,
                                                         @RequestParam(name = "userId") Long targetUserId) {
         return userService.saveDetailUserInfo( targetUserId, userDetailRequestDto);

@@ -88,9 +88,12 @@ public class UserService {
     public UserSimpleResponseDto saveSimpleUserInfo(UserSimpleRequestDto requestDto) {
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
         UserSimpleEntity user = new UserSimpleEntity(requestDto, encodedPassword);
-        UserSimpleEntity savedUser = userSimpleRepository.save(user);
-        log.info("savedEntity user : {}", savedUser);
-        return new UserSimpleResponseDto(savedUser);
+        UserSimpleEntity savedSimpleUser = userSimpleRepository.save(user);
+        UserDetailEntity userDetailEntity = new UserDetailEntity(UserStatusEnum.NONE);
+        UserDetailEntity savedDetailUser = userDetailRepository.save(userDetailEntity);
+        savedSimpleUser.setDetailUser(savedDetailUser);
+        log.info("savedEntity user : {}", savedSimpleUser);
+        return new UserSimpleResponseDto(savedSimpleUser);
     }
 
     /**
@@ -108,17 +111,15 @@ public class UserService {
      * user 2차 프로필 저장
      */
     @Transactional
-    public UserDetailResponseDto saveDetailUserInfo(Long targetUserId, UserDetailRequestDto requestDto) {
+    public UserResponseDto saveDetailUserInfo(Long targetUserId, UserDetailRequestDto requestDto) {
         log.info("1차 프로필 id : {}", targetUserId);
-        UserDetailEntity userDetailEntity = new UserDetailEntity(requestDto);
-        UserDetailEntity savedUser = userDetailRepository.save(userDetailEntity);
         UserSimpleEntity simpleUser = getSimpleUser(targetUserId);
+        UserDetailEntity userDetailEntity = new UserDetailEntity(requestDto);
+        UserDetailEntity savedDetailUser = userDetailRepository.save(userDetailEntity);
+        simpleUser.setDetailUser(savedDetailUser);
 
-        simpleUser.setDetailUser(savedUser);
-        savedUser.setSimpleUser(simpleUser);
-
-        log.info("저장결과 1차 프로필 userId : {} 2차 프로필 userId : {}", simpleUser.getUserNo(), savedUser.getSeq());
-        return new UserDetailResponseDto(savedUser);
+        log.info("저장결과 1차 프로필 userId : {} 2차 프로필 userId : {}", simpleUser.getUserNo(), savedDetailUser.getSeq());
+        return new UserResponseDto(simpleUser, savedDetailUser);
     }
 
     /**

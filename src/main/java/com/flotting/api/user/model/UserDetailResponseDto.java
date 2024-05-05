@@ -119,6 +119,9 @@ public class UserDetailResponseDto {
     @Schema(description = "거절사유")
     private String rejectedReason;
 
+    @Schema(description = "상세주소")
+    private String detailLocation;
+
     public UserDetailResponseDto(UserDetailEntity user) {
         this.seq = user.getSeq();
         this.appliedPath = user.getAppliedPath().name();

@@ -67,7 +67,7 @@ public class SampleDataMaker {
                     .drinking(drinkings.get(idx).name())
                     .education(educations.get(idx).name())
                     .email(emails.get(idx))
-                    .grade(grades.get(idx).name())
+//                    .grade(grades.get(idx).name())
                     .hobby(hobbies.get(idx))
                     .location(locations.get(idx).name())
                     .nickName(nickNames.get(idx))
@@ -76,8 +76,8 @@ public class SampleDataMaker {
                     .recommendUserName(recommendUserNames.get(idx))
                     .URI(URIs.get(idx))
                     .build();
-            UserDetailResponseDto userDetailResponseDto = userService.saveDetailUserInfo(userSimpleResponseDto.getUserNo(), detailRequestDto);
-            result.add(new UserResponseDto(userSimpleResponseDto, userDetailResponseDto));
+            UserResponseDto userResponseDto = userService.saveDetailUserInfo(userSimpleResponseDto.getUserNo(), detailRequestDto);
+            result.add(userResponseDto);
         });
         return result;
     }
@@ -114,7 +114,6 @@ public class SampleDataMaker {
                         .drinking(DrinkingEnum.byValue(array[21]).name())
                         .education(EducationEnum.byValue(array[19]).name())
                         .email(array[16])
-                        .grade(GradeEnum.byValue(array[22]).name())
                         .hobby(List.of(array[12]))
                         .location(LocationEnum.byValue(array[4]).name())
                         .nickName(array[16])
@@ -124,8 +123,8 @@ public class SampleDataMaker {
                         .URI("")
 //                        .approvedAt(LocalDate.parse(array[23], DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                         .build();
-                UserDetailResponseDto userDetailResponseDto = userService.saveDetailUserInfo(userSimpleResponseDto.getUserNo(), detailRequestDto);
-                result.add(new UserResponseDto(userSimpleResponseDto, userDetailResponseDto));
+                UserResponseDto userResponseDto = userService.saveDetailUserInfo(userSimpleResponseDto.getUserNo(), detailRequestDto);
+                result.add(userResponseDto);
             }
         } catch (IOException e) {
             e.printStackTrace();

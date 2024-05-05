@@ -85,11 +85,11 @@ public class SampleDataMaker {
                     .userStatus(UserStatusEnum.byValue(array[26]).name())
                     .job("PROFESSIONAL")
                     .build();
-            UserDetailResponseDto userDetailResponseDto = userService.saveDetailUserInfo(userSimpleResponseDto.getUserNo(), detailRequestDto);
+            UserResponseDto userResponseDto = userService.saveDetailUserInfo(userSimpleResponseDto.getUserNo(), detailRequestDto);
 
             ApproveRequestDto approveRequestDto = new ApproveRequestDto("G", "comment", 1L);
             managerService.approveInfo(userSimpleResponseDto.getUserNo(), approveRequestDto);
-            result.add(new UserResponseDto(userSimpleResponseDto, userDetailResponseDto));
+            result.add(userResponseDto);
         }
         return result;
     }

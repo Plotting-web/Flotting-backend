@@ -94,13 +94,16 @@ public class UserDetailRequestDto {
             "WITHDRAWAL", "DORMANT", "NORMAL", "FORCED_WITHDRAWAL"})
     private String userStatus;
 
+    @Schema(description = "상세주소", example = "강남구 논현로..")
+    private String detailLocation;
+
     @Builder
     public UserDetailRequestDto(String path, String detailJob, String lifeStyle, String somethingWantToSay,
                                 String drinking, String education, String email, String job,
                                 Integer height, List<String> hobby, String URI, String location,
                                 List<String> character, String nickName, String preferredDate, List<String> profileImageURIs,
                                 String gender, Boolean smoking, String recommendUserName,
-                                String mbti, String userStatus) {
+                                String mbti, String userStatus, String detailLocation) {
         this.appliedPath = path;
         this.detailJob = detailJob;
         this.lifeStyle = lifeStyle;
@@ -125,5 +128,6 @@ public class UserDetailRequestDto {
 //        this.managerId = getManagerId();
         this.preferredDate = getPreferredDate();
         this.job = job;
+        this.detailLocation = detailLocation;
     }
 }
