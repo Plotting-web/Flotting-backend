@@ -29,7 +29,7 @@ public class UserDetailRequestDto {
     private String email;
 
     @Schema(description = "신청 경로", example = "SMALL_CLASS_C",
-            allowableValues = {"SMALL_CLASS_C", "FRIP", "WADIZ", "NAVER", "RECOMMEND", "ETC", "SNS"})
+            allowableValues = {"SMALL_CLASS_C", "FRIP", "WADIZ", "NAVER_CAFE", "NAVER_STORE", "RECOMMEND", "ETC", "SNS"})
     private String appliedPath;
 
     @Schema(description = "추천인 이름", example = "hong")

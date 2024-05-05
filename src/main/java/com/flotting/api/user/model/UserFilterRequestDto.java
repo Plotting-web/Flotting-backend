@@ -36,7 +36,7 @@ public class UserFilterRequestDto {
     @Schema(description = "직업", allowableValues = {"PROFESSIONAL", "MID_MAJOR_COMPANY", "FINANCE", "PUBLIC_COMPANY", "EDU", "LAB", "MEDICAL",
                                                     "BUSNINESS", "SMALL_COMPANY", "FREELANCER", "STUDENT", "MAJOR_COMPANY", "MID_COMPANY", "MINOR_COMPANY", "STARTUP", "ETC"})
     List<JobEnum> job = new ArrayList<>();
-    @Schema(description = "신청 경로", allowableValues = {"SMALL_CLASS_C", "FRIP", "WADIZ", "NAVER", "RECOMMEND", "ETC", "SNS"})
+    @Schema(description = "신청 경로", allowableValues = {"SMALL_CLASS_C", "FRIP", "WADIZ", "NAVER_CAFE", "NAVER_STORE",  "RECOMMEND", "ETC", "SNS"})
     List<AppliedPathEnum> appliedPath = new ArrayList<>();
     @Schema(description = "승인 매니저 id", format="Long")
     List<Long> managerIds = new ArrayList<>();

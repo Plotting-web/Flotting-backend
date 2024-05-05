@@ -61,7 +61,7 @@ public class UserResponseDto {
     private String email;
 
     @Schema(description = "신청 경로", example = "SMALL_CLASS_C",
-            allowableValues = {"SMALL_CLASS_C", "FRIP", "WADIZ", "NAVER", "RECOMMEND", "ETC", "SNS"})
+            allowableValues = {"SMALL_CLASS_C", "FRIP", "WADIZ", "NAVER_CAFE", "NAVER_STORE",  "RECOMMEND", "ETC", "SNS"})
     private String appliedPath;
 
     @Schema(description = "추천인 이름", example = "hong")
@@ -207,34 +207,35 @@ public class UserResponseDto {
         this.phoneNumber = userSimpleEntity.getPhoneNumber();
         this.name = userSimpleEntity.getName();
         this.email = userSimpleEntity.getEmail();
-
-        this.detailProfileId = userDetailEntity.getSeq();
-        this.appliedPath = userDetailEntity.getAppliedPath().name();
-        this.detailJob = userDetailEntity.getDetailJob();
-        this.drinking = userDetailEntity.getDrinking().name();
-        this.education = userDetailEntity.getEducation().name();
-        this.grade = userDetailEntity.getGrade().name();
-        this.height = userDetailEntity.getHeight();
-        this.hobby = userDetailEntity.getHobby().stream().map(HobbyEnum::name).collect(Collectors.toList());
-        this.identityVerificationURI = userDetailEntity.getIdentityVerificationURI();
-        this.location = userDetailEntity.getLocation().name();
-        this.nickName = userDetailEntity.getNickName();
-        this.gender = userDetailEntity.getGender().name();
-        this.smoking = userDetailEntity.getSmoking();
-        this.recommendUserName = userDetailEntity.getRecommendUserName();
-        this.managerId = userDetailEntity.getManager().getSeq();
-        this.approvedAt = userDetailEntity.getApprovedAt();
-        this.mbti = userDetailEntity.getMbti();
-        this.character = userDetailEntity.getCharacter().stream().map(CharacterEnum::name).collect(Collectors.toList());
-        this.preferredDate = userDetailEntity.getPreferredDate();
-        this.birthday = userDetailEntity.getBirthday();
-        this.managerComment = userDetailEntity.getManagerComment();
-        this.preferredDate= userDetailEntity.getPreferredDate();
-        this.lifeStyle = userDetailEntity.getLifeStyle();
-        this.somethingWantToSay = userDetailEntity.getSomethingWantToSay();
-        this.rejectedReason = userDetailEntity.getRejectedReason();
-        this.userStatus = Objects.nonNull(userDetailEntity.getUserStatus()) ? userDetailEntity.getUserStatus().name() : null;
-        this.job = Objects.nonNull(userDetailEntity.getJob()) ? userDetailEntity.getJob().name() : null;
+        if(Objects.nonNull(userDetailEntity)) {
+            this.detailProfileId = userDetailEntity.getSeq();
+            this.appliedPath = userDetailEntity.getAppliedPath().name();
+            this.detailJob = userDetailEntity.getDetailJob();
+            this.drinking = userDetailEntity.getDrinking().name();
+            this.education = userDetailEntity.getEducation().name();
+            this.grade = userDetailEntity.getGrade().name();
+            this.height = userDetailEntity.getHeight();
+            this.hobby = userDetailEntity.getHobby().stream().map(HobbyEnum::name).collect(Collectors.toList());
+            this.identityVerificationURI = userDetailEntity.getIdentityVerificationURI();
+            this.location = userDetailEntity.getLocation().name();
+            this.nickName = userDetailEntity.getNickName();
+            this.gender = userDetailEntity.getGender().name();
+            this.smoking = userDetailEntity.getSmoking();
+            this.recommendUserName = userDetailEntity.getRecommendUserName();
+            this.managerId = userDetailEntity.getManager().getSeq();
+            this.approvedAt = userDetailEntity.getApprovedAt();
+            this.mbti = userDetailEntity.getMbti();
+            this.character = userDetailEntity.getCharacter().stream().map(CharacterEnum::name).collect(Collectors.toList());
+            this.preferredDate = userDetailEntity.getPreferredDate();
+            this.birthday = userDetailEntity.getBirthday();
+            this.managerComment = userDetailEntity.getManagerComment();
+            this.preferredDate= userDetailEntity.getPreferredDate();
+            this.lifeStyle = userDetailEntity.getLifeStyle();
+            this.somethingWantToSay = userDetailEntity.getSomethingWantToSay();
+            this.rejectedReason = userDetailEntity.getRejectedReason();
+            this.userStatus = Objects.nonNull(userDetailEntity.getUserStatus()) ? userDetailEntity.getUserStatus().name() : null;
+            this.job = Objects.nonNull(userDetailEntity.getJob()) ? userDetailEntity.getJob().name() : null;
+        }
     }
 
 

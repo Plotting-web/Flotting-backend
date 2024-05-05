@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -108,6 +109,7 @@ public class UserService {
      */
     @Transactional
     public UserDetailResponseDto saveDetailUserInfo(Long targetUserId, UserDetailRequestDto requestDto) {
+        log.info("1차 프로필 id : {}", targetUserId);
         UserDetailEntity userDetailEntity = new UserDetailEntity(requestDto);
         UserDetailEntity savedUser = userDetailRepository.save(userDetailEntity);
         UserSimpleEntity simpleUser = getSimpleUser(targetUserId);
@@ -115,7 +117,7 @@ public class UserService {
         simpleUser.setDetailUser(savedUser);
         savedUser.setSimpleUser(simpleUser);
 
-        log.info("savedEntity simple user : {} detail user : {}", simpleUser.getUserNo(), savedUser.getSeq());
+        log.info("저장결과 1차 프로필 userId : {} 2차 프로필 userId : {}", simpleUser.getUserNo(), savedUser.getSeq());
         return new UserDetailResponseDto(savedUser);
     }
 
