@@ -62,7 +62,7 @@ public class UserService {
      */
     @Transactional(readOnly = true)
     public List<UserDetailResponseDto> getDetailUserInfos(Pageable pageable, String type) {
-        if("all".equals(type)) {
+        if ("all".equals(type)) {
             return userDetailRepository.findAllByOrderByCreatedAtDesc(pageable).getContent()
                     .stream().map(UserDetailResponseDto::new)
                     .collect(Collectors.toList());
@@ -114,7 +114,14 @@ public class UserService {
     public UserResponseDto saveDetailUserInfo(Long targetUserId, UserDetailRequestDto requestDto) {
         log.info("1차 프로필 id : {}", targetUserId);
         UserSimpleEntity simpleUser = getSimpleUser(targetUserId);
-        UserDetailEntity userDetailEntity = new UserDetailEntity(requestDto);
+        UserDetailEntity userDetailEntity = simpleUser.getUserDetailEntity();
+
+        if (userDetailEntity == null) {
+            userDetailEntity = new UserDetailEntity(requestDto);
+        } else {
+            userDetailEntity.updateInfo(requestDto);
+        }
+
         UserDetailEntity savedDetailUser = userDetailRepository.save(userDetailEntity);
         simpleUser.setDetailUser(savedDetailUser);
 
@@ -173,7 +180,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public void downloadExcel(UserFilterRequestDto userFilterRequestDto, HttpServletResponse response) {
         List<UserResponseDto> responseDtos = getUsersByFilter(userFilterRequestDto, Pageable.unpaged());
-        if(responseDtos.size() == 0) {
+        if (responseDtos.size() == 0) {
             log.info("데이터 없음! userFilter : {}", userFilterRequestDto.toString());
             return;
         }
