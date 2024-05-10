@@ -290,4 +290,8 @@ public class UserDetailEntity extends BaseEntity {
             return Integer.parseInt("20".concat(birthday.substring(0, 2)));
         }
     }
+
+    public void changeStatus(UserStatusEnum statusEnum) {
+        this.userStatus = statusEnum ;
+    }
 }
