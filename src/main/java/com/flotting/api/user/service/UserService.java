@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -117,7 +118,7 @@ public class UserService {
         UserSimpleEntity simpleUser = getSimpleUser(targetUserId);
         UserDetailEntity userDetailEntity = simpleUser.getUserDetailEntity();
 
-        if (userDetailEntity == null) {
+        if (userDetailEntity == null || UserStatusEnum.NONE.equals(userDetailEntity.getUserStatus())) {
             userDetailEntity = new UserDetailEntity(requestDto);
         } else {
             userDetailEntity.updateInfo(requestDto);
