@@ -118,7 +118,7 @@ public class UserService {
         UserSimpleEntity simpleUser = getSimpleUser(targetUserId);
         UserDetailEntity userDetailEntity = simpleUser.getUserDetailEntity();
 
-        if (userDetailEntity == null || UserStatusEnum.NONE.equals(userDetailEntity.getUserStatus())) {
+        if (userDetailEntity == null) {
             userDetailEntity = new UserDetailEntity(requestDto);
         } else {
             userDetailEntity.updateInfo(requestDto);
