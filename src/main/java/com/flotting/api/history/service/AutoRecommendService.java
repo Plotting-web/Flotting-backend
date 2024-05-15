@@ -5,11 +5,16 @@ import com.flotting.api.history.model.AutoRecommendedData;
 import com.flotting.api.history.repository.AutoRecommendRepository;
 import com.flotting.api.user.entity.UserDetailEntity;
 import com.flotting.api.user.entity.UserSimpleEntity;
+import com.flotting.api.user.enums.GradeEnum;
 import com.flotting.api.user.model.UserDetailResponseDto;
 import com.flotting.api.user.service.UserService;
 import com.flotting.api.util.type.AutoRecommendProcessEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.ListUtils;
+import org.apache.commons.collections4.SetUtils;
+import org.apache.commons.compress.utils.Lists;
+import org.apache.commons.compress.utils.Sets;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,7 +74,6 @@ public class AutoRecommendService {
          * 2명이상의 리스트가 나올경우, 나이차가 적은 사람 순으로 정렬해서 2명만 소개, 만약 3명이상이면 랜덤 2명고르기
          * 자동 매칭 결과가 2명 미만일 경우 프로필 대신에 매니저에게 문의주세요 문구생성
          */
-    //TODO 매칭기준 기획 필요
     public List<AutoRecommendedData> createAutoRecommend(Long simpleProfileId) {
         List<AutoRecommendedData> recommendedList = new ArrayList<>();
         UserSimpleEntity targetUser = userService.getSimpleUser(simpleProfileId);
@@ -91,7 +95,7 @@ public class AutoRecommendService {
          * p1명일 경우 & d 1명나오는지
          */
         //TODO : 가입 일자 기준이 1차 프로필 등록 직후 or  2차프로필 등록 직후
-//        boolean isSignedUpOverTwoWeeks = true;
+//        boolean isSignedUpUnderTwoWeeks = true;
 
         /**
          * 2명: 한등급 -> 등급 내림차순으로 / 2명 : 동등급 -> 등급 내림차순으로
@@ -109,64 +113,72 @@ public class AutoRecommendService {
          *                                                      P : P -> D -> G = 2 -> 3 -> 1
          *                                                      D : D -> P -> G = 3 -> 2 -> 1
          */
-        /**
-         * 자동추천 매칭 이력에 있으면 제외
-         */
-        Set<Long> alreadyAutoRecommendedUsers = getRecommendedUsers(targetUser.getUserNo());
-        /**
-         * 플러팅 이력에 있으면 제외
-         */
-        Set<Long> alreadyMatchedUsers = matchingHistoryService.getRecommendedUsers(targetUser.getUserNo());
-        alreadyAutoRecommendedUsers.addAll(alreadyMatchedUsers);
-        List<Long> exceptIds = alreadyAutoRecommendedUsers.stream().toList();
-
-        Set<UserDetailResponseDto> result = new HashSet<>();
-        List<UserDetailResponseDto> targetGradeData = userService.getUsersByGradeAndSimpleProfileIdsNotInLimit(targetDetailUser.getGrade(), exceptIds, targetUser, 2);
-        log.info("1차 쿼리 등급 : {} 지정 조회 결과 : {}", targetDetailUser.getGrade(), targetGradeData.toString());
-        result.addAll(targetGradeData);
-        if(result.size() < 2) {
-            result.forEach(data -> alreadyAutoRecommendedUsers.add(data.getSeq()));
-            List<UserDetailResponseDto> gradeDescData = userService.getUsersBySimpleProfileIdsNotInLimit(alreadyAutoRecommendedUsers.stream().toList(), targetUser, 2 - result.size());
-            log.info("2차 쿼리 등급 내림차순 조회 결과 : {}", gradeDescData.toString());
-            result.addAll(gradeDescData);
-        }
+        Set<Long> exceptIds = getAlreadyRecommendedOrMatchedUsers(targetUser);
+        Set<UserDetailResponseDto> result = getFutureRecommendedUsers(targetDetailUser.getGrade(), targetUser, exceptIds);
+        result.forEach(data -> {
+            exceptIds.add(data.getSeq());
+        });
 
         boolean isSignedUpOverTwoWeeks = LocalDateTime.now().isAfter(targetDetailUser.getApprovedAt().plusWeeks(2));
-//        if(!isSignedUpOverTwoWeeks) {
-//            log.info("가입 2주 미만으로 2명 추가 쿼리 ");
-//            GradeEnum targetGrade = GradeEnum.getUpperGrade(targetDetailUser.getGrade());
-//            List<UserDetailResponseDto> secondTargetGradeData = userService.getUsersByGradeAndSimpleProfileIdsNotInLimit(targetGrade, exceptIds, targetUser, 2);
-//            log.info("1차 쿼리 한단계 높은 등급 : {} 지정 조회 결과 : {}", targetGrade, secondTargetGradeData.toString());
-//            result.addAll(secondTargetGradeData);
-//            if(result.size() < 4) {
-//                result.forEach(data -> alreadyAutoRecommendedUsers.add(data.getSeq()));
-//                List<UserDetailResponseDto> secondGradeDescData = userService.getUsersBySimpleProfileIdsNotInLimit(alreadyAutoRecommendedUsers.stream().toList(), targetUser, 4 - result.size());
-//                log.info("2차 쿼리 등급 내림차순 조회 결과 : {}", secondGradeDescData.toString());
-//                result.addAll(secondGradeDescData);
-//            }
-//        }
-//        int totalSize = isSignedUpOverTwoWeeks ? 2 : 4;
-//
-//        if (result.size() < totalSize){
-//            log.info("매니저에게 문의해주세요");
-//        }
+        if(!isSignedUpOverTwoWeeks) {
+            log.info("가입 2주 미만으로 2명 추가 쿼리 ! simpleUser : {}", targetUser.getUserNo());
+            GradeEnum targetGrade = GradeEnum.getUpperGrade(targetDetailUser.getGrade());
+            result.addAll(getFutureRecommendedUsers(targetGrade, targetUser, exceptIds));
+        }
+        int totalSize = isSignedUpOverTwoWeeks ? 2 : 4;
+
+        if (result.size() < totalSize) {
+            log.info("매니저에게 문의해주세요");
+            recommendedList.add(AutoRecommendedData.emptyData(targetUser.getName(), totalSize));
+            return recommendedList;
+        }
 
         result.forEach(data -> {
-            Long recommendedUserId = data.getSeq();
-            UserDetailEntity recommendedUser = userService.getDetailUser(recommendedUserId);
-            AutoRecommendHistory savedEntity = AutoRecommendHistory.builder()
+            AutoRecommendHistory history = AutoRecommendHistory.builder()
                     .receiver(targetUser)
-                    .profile(recommendedUser.getUserSimpleEntity())
+                    .profile(userService.getSimpleUser(data.getSeq()))
                     .build();
-//            log.info("Save RecommendedHistory! receiver : {} recommendUser: {}", targetDetailUser.getEmail(), recommendedUser.getEmail());
-//            AutoRecommendHistory savedEntity = autoRecommendRepository.save(autoRecommendHistory);
+            log.info("Save RecommendedHistory! receiverNo : {} recommendUser: {}", targetUser.getUserNo(), data.getSeq());
+            AutoRecommendHistory savedEntity = autoRecommendRepository.save(history);
             recommendedList.add(new AutoRecommendedData(savedEntity));
         });
         return recommendedList;
     }
+    
+    private Set<UserDetailResponseDto> getFutureRecommendedUsers(GradeEnum targetGrade, UserSimpleEntity targetUser, Set<Long> exceptIds) {
+        UserDetailEntity targetDetailUser = targetUser.getUserDetailEntity();
+        Set<UserDetailResponseDto> result = new HashSet<>();
+
+        List<UserDetailResponseDto> sameGradeData = userService.getUsersByGradeAndSimpleProfileIdsNotInLimit(targetGrade, targetDetailUser, exceptIds, 2);
+        log.info("동등급 조회 쿼리 수행!! 타겟 등급 : {} 쿼리 결과 : {}", targetDetailUser.getGrade(), sameGradeData.toString());
+        result.addAll(sameGradeData);
+        if(result.size() < 2) {
+            result.forEach(data -> exceptIds.add(data.getSeq()));
+            List<UserDetailResponseDto> downGradeData = userService.getUsersBySimpleProfileIdsNotInLimit(targetDetailUser, exceptIds, 2 - result.size());
+            log.info("하위 등급 조회 쿼리 결과 : {}", downGradeData.toString());
+            result.addAll(downGradeData);
+        }
+        
+        return result;
+    }
+    
+    private Set<Long> getAlreadyRecommendedOrMatchedUsers(UserSimpleEntity targetUser) {
+        /**
+         * 자동추천 매칭 이력에 있으면 제외
+         */
+        Set<Long> alreadyAutoRecommendedUsers = getAutoRecommendedUsers(targetUser.getUserNo());
+        /**
+         * 플러팅 이력에 있으면 제외
+         */
+        Set<Long> alreadyMatchedUsers = matchingHistoryService.getMatchedUsers(targetUser.getUserNo());
+        Set<Long> exceptIds = new HashSet<>();
+        exceptIds.addAll(alreadyAutoRecommendedUsers);
+        exceptIds.addAll(alreadyMatchedUsers);
+        return exceptIds;
+    }
 
     @Transactional(readOnly = true)
-    public Set<Long> getRecommendedUsers(Long targetUserId) {
+    public Set<Long> getAutoRecommendedUsers(Long targetUserId) {
         Set<Long> result = new HashSet<>();
         result.add(targetUserId);
         List<AutoRecommendHistory> datas = autoRecommendRepository.findByReceiver_UserNoOrProfile_UserNo(targetUserId, targetUserId);
@@ -175,7 +187,7 @@ public class AutoRecommendService {
             result.add(data.getReceiver().getUserDetailEntity().getSeq());
         });
         result.remove(targetUserId);
-        log.info("getRecommendedUsers! targetUser : {} RecommendedUsers : {}", targetUserId, result.toString());
+        log.info("getAutoRecommendedUsers! targetUser : {} RecommendedUsers : {}", targetUserId, result.toString());
         return result;
     }
 
@@ -183,4 +195,5 @@ public class AutoRecommendService {
     public List<AutoRecommendHistory> getAll() {
         return autoRecommendRepository.findAll();
     }
+    
 }

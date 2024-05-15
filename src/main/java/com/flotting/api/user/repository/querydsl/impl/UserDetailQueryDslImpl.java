@@ -1,6 +1,7 @@
 package com.flotting.api.user.repository.querydsl.impl;
 
 
+import com.flotting.api.user.entity.UserDetailEntity;
 import com.flotting.api.user.entity.UserSimpleEntity;
 import com.flotting.api.user.enums.*;
 import com.flotting.api.user.model.QUserResponseDto;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.flotting.api.user.entity.QUserDetailEntity.userDetailEntity;
@@ -74,13 +76,13 @@ public class UserDetailQueryDslImpl implements UserDetailQueryDsl {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserDetailResponseDto> findUsersByGradeAndSimpleProfileIdNotInOrderByAgeDiffAsc(GradeEnum grade, List<Long> ids, UserSimpleEntity targetUser, int limit) {
+    public List<UserDetailResponseDto> findUsersByGradeAndSimpleProfileIdNotInOrderByAgeDiffAsc(GradeEnum targetGrade, UserDetailEntity detailUser, Set<Long> exceptIds, int limit) {
         return jpaQueryFactory
                 .selectFrom(userDetailEntity)
-                .where(userDetailEntity.grade.eq(grade)
-                        .and(userDetailEntity.userSimpleEntity.userNo.notIn(ids))
-                        .and(userDetailEntity.gender.ne(targetUser.getUserDetailEntity().getGender())))
-                .orderBy(userDetailEntity.userSimpleEntity.age.subtract(targetUser.getAge()).abs().asc())
+                .where(userDetailEntity.grade.eq(targetGrade)
+                        .and(userDetailEntity.userSimpleEntity.userNo.notIn(exceptIds))
+                        .and(userDetailEntity.gender.ne(detailUser.getGender())))
+                .orderBy(userDetailEntity.birthYear.subtract(detailUser.getBirthYear()).abs().asc())
                 .limit(limit)
                 .fetch()
                 .stream().map(UserDetailResponseDto::new)
@@ -88,12 +90,12 @@ public class UserDetailQueryDslImpl implements UserDetailQueryDsl {
     }
 
     @Override
-    public List<UserDetailResponseDto> findUsersBySimpleProfileIdNotInOrderByAgeDiffAsc(List<Long> ids, UserSimpleEntity targetUser, int limit) {
+    public List<UserDetailResponseDto> findUsersBySimpleProfileIdNotInOrderByAgeDiffAsc(UserDetailEntity targetUser, Set<Long> exceptIds, int limit) {
         return jpaQueryFactory
                 .selectFrom(userDetailEntity)
-                .where((userDetailEntity.userSimpleEntity.userNo.notIn(ids))
-                        .and(userDetailEntity.gender.ne(targetUser.getUserDetailEntity().getGender())))
-                .orderBy(userDetailEntity.grade.desc(), userDetailEntity.userSimpleEntity.age.subtract(targetUser.getAge()).abs().asc())
+                .where((userDetailEntity.userSimpleEntity.userNo.notIn(exceptIds))
+                        .and(userDetailEntity.gender.ne(targetUser.getGender())))
+                .orderBy(userDetailEntity.grade.desc(), userDetailEntity.birthYear.subtract(targetUser.getBirthYear()).abs().asc())
                 .limit(limit)
                 .fetch()
                 .stream().map(UserDetailResponseDto::new)

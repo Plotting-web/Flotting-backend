@@ -23,7 +23,7 @@ public class ExcelServiceTest extends SampleDataMaker {
     @Transactional
     public void 사용자_액셀_다운로드() {
         //given
-        makeUserData();
+        makeUserData(true);
         UserFilterRequestDto userFilterRequestDto = new UserFilterRequestDto();
         MockHttpServletResponse mockHttpServletResponse = new MockHttpServletResponse();
 

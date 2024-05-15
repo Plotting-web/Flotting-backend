@@ -1,6 +1,8 @@
 package com.flotting.api.user.repository.querydsl;
 
+import com.flotting.api.user.entity.UserDetailEntity;
 import com.flotting.api.user.entity.UserSimpleEntity;
+import com.flotting.api.user.enums.GenderEnum;
 import com.flotting.api.user.enums.GradeEnum;
 import com.flotting.api.user.model.UserDetailResponseDto;
 import com.flotting.api.user.model.UserFilterRequestDto;
@@ -10,6 +12,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public interface UserDetailQueryDsl {
@@ -18,8 +21,8 @@ public interface UserDetailQueryDsl {
 
     List<UserResponseDto> findUsersByFilter(UserFilterRequestDto filter, Pageable pageable);
 
-    List<UserDetailResponseDto> findUsersByGradeAndSimpleProfileIdNotInOrderByAgeDiffAsc(GradeEnum gradeEnum, List<Long> ids, UserSimpleEntity targetUser, int limit);
-    List<UserDetailResponseDto> findUsersBySimpleProfileIdNotInOrderByAgeDiffAsc(List<Long> ids, UserSimpleEntity targetUser, int limit);
+    List<UserDetailResponseDto> findUsersByGradeAndSimpleProfileIdNotInOrderByAgeDiffAsc(GradeEnum targetGrade, UserDetailEntity userDetailEntity, Set<Long> exceptIds, int limit);
+    List<UserDetailResponseDto> findUsersBySimpleProfileIdNotInOrderByAgeDiffAsc(UserDetailEntity targetUser, Set<Long> exceptIds, int limit);
 
     default BooleanBuilder nullSafeBuilder(Supplier<BooleanExpression> f) {
         try {

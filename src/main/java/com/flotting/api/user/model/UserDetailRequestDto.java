@@ -103,7 +103,7 @@ public class UserDetailRequestDto {
                                 Integer height, List<String> hobby, String URI, String location,
                                 List<String> character, String nickName, String preferredDate, List<String> profileImageURIs,
                                 String gender, Boolean smoking, String recommendUserName,
-                                String mbti, String userStatus, String detailLocation) {
+                                String mbti, String userStatus, String detailLocation, String birthday) {
         this.appliedPath = path;
         this.detailJob = detailJob;
         this.lifeStyle = lifeStyle;
@@ -129,5 +129,6 @@ public class UserDetailRequestDto {
         this.preferredDate = getPreferredDate();
         this.job = job;
         this.detailLocation = detailLocation;
+        this.birthday = birthday;
     }
 }

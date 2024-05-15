@@ -189,7 +189,7 @@ public class UserDetailEntity extends BaseEntity {
     private LocalDateTime approvedAt;
 
     /**
-     * 출생연도 - 사용자들 나이 비교를 위해 필요
+     * 출생연도 - 자동매칭 및 관리자페이지 > 사용자들 나이 필터를 위해 필요
      */
     private Integer birthYear;
 
@@ -226,30 +226,36 @@ public class UserDetailEntity extends BaseEntity {
         this.somethingWantToSay = requestDto.getSomethingWantToSay();
         this.birthday = requestDto.getBirthday();
         this.profileImageURIs = requestDto.getProfileImageURIs();
-        this.userStatus = Objects.nonNull(requestDto.getUserStatus()) ? UserStatusEnum.of(requestDto.getUserStatus()) : UserStatusEnum.INPROGRESS;
         this.detailLocation = requestDto.getDetailLocation();
         this.birthYear = getBirthYear(requestDto.getBirthday());
+        this.userStatus = UserStatusEnum.INPROGRESS;
     }
 
     public UserDetailEntity updateInfo(UserDetailRequestDto requestDto) {
-        this.appliedPath = AppliedPathEnum.of(requestDto.getAppliedPath());
-        this.detailJob = requestDto.getDetailJob();
-        this.lifeStyle = requestDto.getLifeStyle();
-        this.drinking = DrinkingEnum.of(requestDto.getDrinking());
-        this.education = EducationEnum.of(requestDto.getEducation());
         this.height = requestDto.getHeight();
-        this.hobby = requestDto.getHobby().stream().map(HobbyEnum::of).collect(Collectors.toList());
-        this.identityVerificationURI = requestDto.getIdentityVerificationURI();
-        this.profileImageURIs = requestDto.getProfileImageURIs();
-        this.location = LocationEnum.of(requestDto.getLocation());
-        this.nickName = requestDto.getNickName();
         this.gender = GenderEnum.of(requestDto.getGender());
-        this.smoking = requestDto.getSmoking();
+        this.location = LocationEnum.of(requestDto.getLocation());
+        this.email = requestDto.getEmail();
+        this.appliedPath = AppliedPathEnum.of(requestDto.getAppliedPath());
         this.recommendUserName = requestDto.getRecommendUserName();
+        this.hobby = requestDto.getHobby().stream().map(HobbyEnum::of).collect(Collectors.toList());
+        this.nickName = requestDto.getNickName();
+        this.detailJob = requestDto.getDetailJob();
+        this.education = EducationEnum.of(requestDto.getEducation());
+        this.smoking = requestDto.getSmoking();
+        this.drinking = DrinkingEnum.of(requestDto.getDrinking());
+        this.identityVerificationURI = requestDto.getIdentityVerificationURI();
         this.mbti = requestDto.getMbti();
         this.character = requestDto.getCharacter().stream().map(CharacterEnum::of).collect(Collectors.toList());
         this.preferredDate = requestDto.getPreferredDate();
+        this.job = JobEnum.of(requestDto.getJob());
+        this.lifeStyle = requestDto.getLifeStyle();
+        this.somethingWantToSay = requestDto.getSomethingWantToSay();
+        this.birthday = requestDto.getBirthday();
+        this.profileImageURIs = requestDto.getProfileImageURIs();
         this.detailLocation = requestDto.getDetailLocation();
+        this.birthYear = getBirthYear(requestDto.getBirthday());
+        this.userStatus = Objects.nonNull(requestDto.getUserStatus()) ? UserStatusEnum.of(requestDto.getUserStatus()) : UserStatusEnum.INPROGRESS;
         return this;
     }
 
@@ -293,5 +299,9 @@ public class UserDetailEntity extends BaseEntity {
 
     public void changeStatus(UserStatusEnum statusEnum) {
         this.userStatus = statusEnum ;
+    }
+
+    public void updateApprovedAt(LocalDateTime dateTime) {
+        this.approvedAt = dateTime;
     }
 }

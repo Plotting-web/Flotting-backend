@@ -65,7 +65,7 @@ public class MatchingHistoryService {
     }
 
     @Transactional(readOnly = true)
-    public Set<Long> getRecommendedUsers(Long targetUserId) {
+    public Set<Long> getMatchedUsers(Long targetUserId) {
         Set<Long> result = new HashSet<>();
         result.add(targetUserId);
         List<MatchingHistory> datas = matchingHistoryRepository.findByRequester_UserNoOrReceiver_UserNo(targetUserId, targetUserId);
@@ -74,7 +74,7 @@ public class MatchingHistoryService {
             result.add(data.getReceiver().getUserNo());
         });
         result.remove(targetUserId);
-        log.info("getRecommendedUsers! targetUser : {} RecommendedUsers : {}", targetUserId, result.toString());
+        log.info("getMatchedUsers! targetUser : {} RecommendedUsers : {}", targetUserId, result.toString());
         return result;
     }
 }

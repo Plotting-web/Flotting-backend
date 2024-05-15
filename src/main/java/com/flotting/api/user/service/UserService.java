@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -205,13 +206,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserDetailResponseDto> getUsersByGradeAndSimpleProfileIdsNotInLimit(GradeEnum gradeEnum, List<Long> simpleProfileIds, UserSimpleEntity targetUser, int limit) {
-        return userDetailRepository.findUsersByGradeAndSimpleProfileIdNotInOrderByAgeDiffAsc(gradeEnum, simpleProfileIds, targetUser, limit);
+    public List<UserDetailResponseDto> getUsersByGradeAndSimpleProfileIdsNotInLimit(GradeEnum targetGrade, UserDetailEntity detailUser, Set<Long> exceptIds, int limit) {
+        return userDetailRepository.findUsersByGradeAndSimpleProfileIdNotInOrderByAgeDiffAsc(targetGrade, detailUser, exceptIds, limit);
     }
 
     @Transactional(readOnly = true)
-    public List<UserDetailResponseDto> getUsersBySimpleProfileIdsNotInLimit(List<Long> simpleProfileIds, UserSimpleEntity targetUser, int limit) {
-        return userDetailRepository.findUsersBySimpleProfileIdNotInOrderByAgeDiffAsc(simpleProfileIds, targetUser, limit);
+    public List<UserDetailResponseDto> getUsersBySimpleProfileIdsNotInLimit(UserDetailEntity targetUser, Set<Long> exceptIds, int limit) {
+        return userDetailRepository.findUsersBySimpleProfileIdNotInOrderByAgeDiffAsc(targetUser, exceptIds, limit);
     }
 
     @Transactional
@@ -241,6 +242,19 @@ public class UserService {
         UserSimpleEntity simpleUser = getSimpleUser(userId);
         userSimpleRepository.delete(simpleUser);
         log.info("탈퇴완료 userId : {}", userId);
+    }
+
+    @Transactional
+    public void deleteAll() {
+        userDetailRepository.deleteAll();
+        userSimpleRepository.deleteAll();
+    }
+
+    @Transactional
+    public void updateApprovedAt(Long simpleUserId, LocalDateTime dateTime) {
+        UserSimpleEntity simpleUser = getSimpleUser(simpleUserId);
+        UserDetailEntity detailUser = simpleUser.getUserDetailEntity();
+        detailUser.updateApprovedAt(dateTime);
     }
 
 }
