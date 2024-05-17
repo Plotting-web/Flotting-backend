@@ -1,8 +1,11 @@
 package com.flotting.api.user;
 
+import com.flotting.api.manager.model.ApproveRequestDto;
+import com.flotting.api.manager.service.ManagerService;
 import com.flotting.api.user.enums.*;
 import com.flotting.api.user.model.*;
 import com.flotting.api.user.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -17,118 +20,94 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 @SpringBootTest
 public class SampleDataMaker {
-
     @Autowired
     private UserService userService;
 
-    private String filePath = "/Users/jangsoobin/Downloads/testData.csv";
+    @Autowired
+    private ManagerService managerService;
 
-    public List<UserResponseDto> makeUserData() {
+    public List<UserResponseDto> makeUserData(boolean isCSVFile) {
+        managerService.makeSampleData();
+        List<String> datas = new ArrayList<>();
+        if(isCSVFile){
+            datas = makeUserDataByCsv("/Users/jangsoobin/Downloads/testData.csv");
+        } else {
+            datas = getStringData();
+        }
+        return makeUserData(datas);
+    }
+
+    private List<String> getStringData() {
+        List<String> datas = new ArrayList<>();
+        datas.add("박서연,40,165,남성,서울 북부,37482910,1037482910,프립,,,,,,,,,푸른하늘꿈,교육직,초등교사,대학교 졸업,N,자주 마심,D,2024-01-07,애교있는,산책,활성,891126");
+        datas.add("윤지영,37,153,여성,서울 동부,56473821,1056473821,네이버 스토어,,ISFP,,,,,,,무지개빛꿈,일반(공기업/공무원),주택도시보증공사,대학교 졸업,N,거의 안 마심,D,2024-03-22,애교있는,산책,활성,830722");
+        datas.add("이주안,31,158,여성,서울 서부,83729109,1083729109,네이버 스토어,,ESFP,,,,,,,눈부신아침,일반(중견기업),농협 경제지주 전문직,대학교 졸업,N,가끔 마심,D,2024-01-30,애교있는,산책,활성,840926");
+        datas.add("송하율,36,167,여성,서울 동부,84736295,1084736295,네이버 스토어,,INFJ,,,,,,,푸른바다의전설,일반(공기업/공무원),분당서울대학교병원(공공기관) 행정직,대학교 졸업,N,아예 안 마심,P,2024-01-20,애교있는,산책,활성,950702");
+        datas.add("강연우,35,160,여성,서울 서부,29381042,1029381042,네이버 스토어,,INFJ,,,,,,,달콤커피,일반(공기업/공무원),교통안전공단,고등학교 졸업,N,아예 안 마심,P,2024-01-23,애교있는,산책,활성,940610");
+        datas.add("강서현,35,168,여성,경기 동부,19238475,1019238475,와디즈,,ISFJ,,,,,,,눈부신날에,일반(공기업/공무원),KATRI시험연구원(한국의류시험연구원),대학교 졸업,Y,가끔 마심,P,2024-01-24,애교있는,산책,활성,930420");
+        return datas;
+    }
+
+    public List<UserResponseDto> makeUserData(List<String> datas) {
         List<UserResponseDto> result = new ArrayList();
-        List<String> names = List.of("A", "B", "C", "D", "E", "F", "G");
-        List<JobEnum> jobs = List.of(JobEnum.PROFESSIONAL, JobEnum.MID_MAJOR_COMPANY, JobEnum.BUSNINESS, JobEnum.MID_MAJOR_COMPANY, JobEnum.PUBLIC_COMPANY, JobEnum.PROFESSIONAL);
-        List<Integer> ages = List.of(1,18,3,4,5,6);
-        List<String> phoneNumbers = List.of("0101111", "010333", "010222", "010444", "010555", "010666");
-        List<Integer> heights = List.of(1,2,180,4,5,6);
-        List<Boolean> smokings = List.of(Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE);
-        List<BodyEnum> bodies = List.of(BodyEnum.RELIABLE, BodyEnum.SLIM, BodyEnum.SOLID, BodyEnum.CHUBBY, BodyEnum.MUSCULAR, BodyEnum.NORMAL);
-        List<String> charms = List.of("a", "b", "c", "d", "e", "f");
-        List<String> detailJobs = List.of("a", "b", "c", "d", "e", "f");
-        List<DrinkingEnum> drinkings = List.of(DrinkingEnum.ONE_WEEK, DrinkingEnum.THREE_WEEK, DrinkingEnum.TWO_WEEK, DrinkingEnum.ONE_WEEK, DrinkingEnum.TWO_WEEK, DrinkingEnum.THREE_WEEK);
-        List<EducationEnum> educations = List.of(EducationEnum.COLLEGE_ACADEMY_ATTENDING, EducationEnum.COLLEGE_ATTENDING, EducationEnum.JUNIOR_COLLEGE_ATTENDING, EducationEnum.COLLEGE_GRADUATION, EducationEnum.JUNIOR_COLLEGE_GRADUATION, EducationEnum.HIGH_SCHOOL_GRADUATION);
-        List<String> emails = List.of("naver", "daum", "kakao", "google", "never", "gagle");
-        List<GradeEnum> grades = List.of(GradeEnum.D, GradeEnum.D, GradeEnum.G, GradeEnum.P, GradeEnum.G, GradeEnum.D);
-        List<List<String>> hobbies = List.of(List.of("a"), List.of("a"), List.of("a"), List.of("a"), List.of("a"), List.of("a"));
-        List<LocationEnum> locations = List.of(LocationEnum.GGYEONGGI_EAST, LocationEnum.GGYEONGGI_EAST, LocationEnum.GGYEONGGI_EAST, LocationEnum.SEOUL_EAST, LocationEnum.SEOUL_NORTH, LocationEnum.SEOUL_WEST);
-        List<String> nickNames = List.of("a", "b", "c", "d", "e", "f");
-        List<AppliedPathEnum> paths = List.of(AppliedPathEnum.ETC, AppliedPathEnum.FRIP, AppliedPathEnum.FRIP, AppliedPathEnum.FRIP, AppliedPathEnum.FRIP, AppliedPathEnum.RECOMMEND);
-        List<GenderEnum> genders = List.of(GenderEnum.F, GenderEnum.M, GenderEnum.F, GenderEnum.M, GenderEnum.F, GenderEnum.M);
-        List<String> recommendUserNames = List.of("a", "b", "c", "d", "e", "f");
-        List<String> URIs = List.of("a", "b", "c", "d", "e", "f");
-
-        IntStream.range(0, 6).forEach(idx -> {
+        for(String data : datas) {
+            String array[] = data.split(",");
             UserSimpleRequestDto simpleRequestDto = UserSimpleRequestDto.builder()
-                    .name(names.get(idx))
-                    .job(jobs.get(idx).name())
-                    .age(ages.get(idx))
-                    .phoneNumber(phoneNumbers.get(idx))
+                    .name(array[0])
+                    .age(Integer.parseInt(array[1]))
+                    .job(JobEnum.byValue(array[17]).name())
+                    .phoneNumber(array[6])
                     .password("1234")
                     .build();
             UserSimpleResponseDto userSimpleResponseDto = userService.saveSimpleUserInfo( simpleRequestDto);
 
             UserDetailRequestDto detailRequestDto = UserDetailRequestDto.builder()
-                    .height(heights.get(idx))
-                    .smoking(smokings.get(idx))
-                    .detailJob(detailJobs.get(idx))
-                    .drinking(drinkings.get(idx).name())
-                    .education(educations.get(idx).name())
-                    .email(emails.get(idx))
-//                    .grade(grades.get(idx).name())
-                    .hobby(hobbies.get(idx))
-                    .location(locations.get(idx).name())
-                    .nickName(nickNames.get(idx))
-                    .path(paths.get(idx).name())
-                    .gender(genders.get(idx).name())
-                    .recommendUserName(recommendUserNames.get(idx))
-                    .URI(URIs.get(idx))
+                    .height(Integer.parseInt(array[2]))
+                    .smoking("Y".equals(array[20]) ? true : false)
+                    .detailJob(array[18])
+                    .drinking(DrinkingEnum.byValue(array[21]).name())
+                    .education(EducationEnum.byValue(array[19]).name())
+                    .email(array[16])
+                    .hobby(List.of("EXERCISE", "SELF_IMPROVEMENT", "READING"))
+                    .location(LocationEnum.byValue(array[4]).name())
+                    .nickName(array[16])
+                    .path(AppliedPathEnum.byValue(array[7]).name())
+                    .gender("여성".equals(array[3]) ? GenderEnum.F.name() : GenderEnum.M.name())
+                    .recommendUserName(array[8])
+                    .URI("")
+//                    .approvedAt(LocalDateTime.parse(array[23] + " 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                    .mbti(array[9])
+                    .character(List.of(CharacterEnum.byValue(array[24]).name()))
+                    .preferredDate(array[25])
+                    .userStatus(UserStatusEnum.byValue(array[26]).name())
+                    .job("PROFESSIONAL")
+                    .birthday(array[27])
                     .build();
             UserResponseDto userResponseDto = userService.saveDetailUserInfo(userSimpleResponseDto.getUserNo(), detailRequestDto);
+            GradeEnum grade = StringUtils.isNotEmpty(array[22]) && Objects.nonNull(GradeEnum.byValue(array[22])) ? GradeEnum.byValue(array[22]) : GradeEnum.G;
+            ApproveRequestDto approveRequestDto = new ApproveRequestDto(grade.name(), "comment", 1L);
+            managerService.approveInfo(userSimpleResponseDto.getUserNo(), approveRequestDto);
             result.add(userResponseDto);
-        });
+        }
         return result;
     }
 
-    public List<UserResponseDto> makeUserDataByCsv() throws ParseException {
-        List<UserResponseDto> result = new ArrayList();
+    private List<String> makeUserDataByCsv(String filePath) {
+        List<String> dataList = new ArrayList();
         try {
             BufferedReader bf = Files.newBufferedReader(Paths.get(filePath), Charset.forName("UTF-8"));
             String line = "";
             while((line = bf.readLine()) != null) {
-                List<String> dataList = new ArrayList<>();
-                String array[] = line.split(",");
-                dataList = Arrays.asList(array);
-
-                List<String> titleList = List.of("name", "age", "height", "gender", "location",
-                        "phoneNumber", "phoneNumber", "appliedPath", "recommendedName", "loveValues",
-                        "charm", "preference", "hobby", "datePreference", "lifeStyle",
-                        "미래연인에게하고픈말", "nickName", "job", "detailJob", "education",
-                        "smoking", "drinking", "grade", "approvedAt");
-
-                UserSimpleRequestDto simpleRequestDto = UserSimpleRequestDto.builder()
-                        .name(array[0])
-                        .age(Integer.parseInt(array[1]))
-                        .job(JobEnum.byValue(array[17]).name())
-                        .phoneNumber(array[6])
-                        .password("1234")
-                        .build();
-                UserSimpleResponseDto userSimpleResponseDto = userService.saveSimpleUserInfo( simpleRequestDto);
-
-                UserDetailRequestDto detailRequestDto = UserDetailRequestDto.builder()
-                        .height(Integer.parseInt(array[2]))
-                        .smoking("Y".equals(array[20]) ? true : false)
-                        .detailJob(array[18])
-                        .drinking(DrinkingEnum.byValue(array[21]).name())
-                        .education(EducationEnum.byValue(array[19]).name())
-                        .email(array[16])
-                        .hobby(List.of(array[12]))
-                        .location(LocationEnum.byValue(array[4]).name())
-                        .nickName(array[16])
-                        .path(AppliedPathEnum.byValue(array[7]).name())
-                        .gender("여성".equals(array[3]) ? GenderEnum.F.name() : GenderEnum.M.name())
-                        .recommendUserName(array[8])
-                        .URI("")
-//                        .approvedAt(LocalDate.parse(array[23], DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                        .build();
-                UserResponseDto userResponseDto = userService.saveDetailUserInfo(userSimpleResponseDto.getUserNo(), detailRequestDto);
-                result.add(userResponseDto);
+                dataList.add(line);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return dataList;
     }
 }

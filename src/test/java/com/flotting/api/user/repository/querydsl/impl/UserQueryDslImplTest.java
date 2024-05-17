@@ -72,7 +72,7 @@ class UserQueryDslImplTest extends SampleDataMaker {
     @Test
     public void 사용자_1차프로필_조회() {
         //given
-        makeUserData();
+        makeUserData(true);
 
         //when
         List<UserSimpleResponseDto> SimpleUserInfos = userService.getSimpleUserInfos(Pageable.unpaged());
@@ -84,7 +84,7 @@ class UserQueryDslImplTest extends SampleDataMaker {
     @Test
     public void 사용자_2차프로필_조회() {
         //given
-        List<UserResponseDto> userResponseDtos = makeUserData();
+        makeUserData(true);
 
         //when
         List<UserDetailResponseDto> detailUsers = userService.getDetailUserInfos(Pageable.unpaged(), "all");
@@ -96,7 +96,7 @@ class UserQueryDslImplTest extends SampleDataMaker {
     @Test
     public void 사용자_등급별_조회() {
         //given
-        List<UserResponseDto> userResponseDtos = makeUserData();
+        makeUserData(true);
 
         //when
         List<UserDetailResponseDto> users = userService.getDetailUserInfosByGrade(GradeEnum.D.name());
@@ -109,7 +109,7 @@ class UserQueryDslImplTest extends SampleDataMaker {
     public void 사용자_필터링() {
         //TODO 입력안하는거는 all
         //given
-        makeUserData();
+        makeUserData(true);
 
         //when
         UserFilterRequestDto userFilterRequestDto = new UserFilterRequestDto();

@@ -13,6 +13,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -134,6 +136,23 @@ public class UserController {
     @GetMapping("/personal-requester/{userId}")
     public PersonalRequesterResponseDto getPersonalRequester(@PathVariable(name = "userId")Long requesterId) {
         return userService.getPersonalRequester(requesterId);
+    }
+
+    @Operation(summary = "userStatus 변경(탈퇴 외)", description = "탈퇴 외의 상태변경")
+    @Parameter(name = "status", description = "userStatusEnum-NONE, INPROGRESS, REJECT,NORMAL, FORCED_WITHDRAWAL")
+    @ApiResponse(responseCode = "200", description = "userStatus 수정 성공", content = @Content(schema = @Schema(implementation = UserResponseDto.class)))
+    @PutMapping("/status/{userId}")
+    public UserResponseDto changeUserStatus(@PathVariable("userId") Long simpleUserId,
+                                                  @RequestParam("type") String status) {
+        return userService.changeStatus(simpleUserId, status);
+    }
+
+    @Operation(summary = "탈퇴 api", description = "탈퇴 상태변경")
+    @ApiResponse(responseCode = "200", description = "탈퇴 성공", content = @Content(schema = @Schema(implementation = UserResponseDto.class)))
+    @PutMapping("/withdraw/{userId}")
+    public ResponseEntity changeUserStatus(@PathVariable("userId") Long simpleUserId) {
+        userService.withdraw(simpleUserId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }
