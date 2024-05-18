@@ -1,10 +1,12 @@
 package com.flotting.api.history.service;
 
 import com.flotting.api.history.entity.AutoRecommendHistory;
+import com.flotting.api.history.event.AutoRecommendDataPublisher;
 import com.flotting.api.history.model.AutoRecommendedData;
 import com.flotting.api.user.SampleDataMaker;
 import com.flotting.api.user.entity.UserDetailEntity;
 import com.flotting.api.user.entity.UserSimpleEntity;
+import com.flotting.api.user.enums.UserStatusEnum;
 import com.flotting.api.user.model.UserResponseDto;
 import com.flotting.api.user.model.UserSimpleResponseDto;
 import com.flotting.api.user.service.UserService;
@@ -17,12 +19,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.text.ParseException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @SpringBootTest
@@ -35,6 +40,9 @@ class AutoRecommendServiceTest extends SampleDataMaker {
 
     @Autowired
     private ExcelService excelService;
+
+    @Autowired
+    private AutoRecommendDataPublisher autoRecommendDataPublisher;
 
     List<String> maleGData = Arrays.asList(
             "김민준,42,166,남성,서울 북부,48392047,1048392047,프립,,,,,,,,,별빛여행자,일반(중견기업),개발자 - 유비케어,대학교 졸업,N,자주 마심,G,2024-01-01,애교있는,산책,활성,930520",
@@ -923,6 +931,66 @@ class AutoRecommendServiceTest extends SampleDataMaker {
         Assertions.assertEquals(result.size(), 2);
         Assertions.assertTrue(recommendedUserNameList.containsAll(expectedResult));
     }
+
+    @Test
+    @Transactional
+    public void 소개받은_사람_또_소개받지_않도록_테스트() {
+        //given
+        String targetUserPhoneNumber = "1056473821";
+        List<String> datas = new ArrayList<>();
+        datas.add(femaleDData.get(0));
+        datas.addAll(maleDData);
+        List<UserResponseDto> sampleDatas = makeUserData(datas);
+        userService.updateApprovedAt(userService.getUserByPhoneNumber(targetUserPhoneNumber).getUserNo(), LocalDateTime.now().minusWeeks(4));
+
+        //when
+        List<AutoRecommendedData> firstResult = autoRecommendService.createAutoRecommend(targetUserPhoneNumber);
+        List<AutoRecommendedData> secondResult = autoRecommendService.createAutoRecommend(targetUserPhoneNumber);
+
+        //then
+        Assertions.assertNotEquals(firstResult, secondResult);
+    }
+
+    @Test
+    @Transactional
+    public void 휴면해제일경우_이미_이번주_소개받은경우_4개프로필_미소개() {
+        //given
+        List<String> datas = new ArrayList<>();
+        datas.add(femaleDData.get(0));
+        datas.addAll(maleDData);
+        List<UserResponseDto> sampleData = makeUserData(datas);
+        Long userNo = sampleData.get(0).getUserNo();
+
+        //when
+        autoRecommendDataPublisher.createData(sampleData.get(0).getUserNo());
+        Set<Long> alreadyReceivedAutoRecommendedUsers = autoRecommendService.getAutoRecommendedUsers(userNo);
+        autoRecommendDataPublisher.createData(sampleData.get(0).getUserNo());
+        Set<Long> afterAutoRecommendedUsers = autoRecommendService.getAutoRecommendedUsers(userNo);
+
+        //then
+        Assertions.assertEquals(alreadyReceivedAutoRecommendedUsers, afterAutoRecommendedUsers);
+    }
+
+    @Test
+    @Transactional
+    public void 휴면해제일경우_이번주_소개_안받은경우_4개프로필_소개() {
+        //given
+        List<String> datas = new ArrayList<>();
+        datas.add(femaleDData.get(0));
+        datas.addAll(maleDData);
+        List<UserResponseDto> sampleData = makeUserData(datas);
+        Long userNo = sampleData.get(0).getUserNo();
+
+        //when
+        Set<Long> beforeAutoRecommendedUsers = autoRecommendService.getAutoRecommendedUsers(userNo);
+        autoRecommendDataPublisher.createData(userNo);
+        Set<Long> afterAutoRecommendedUsers = autoRecommendService.getAutoRecommendedUsers(userNo);
+
+        //then
+        Assertions.assertEquals(4, afterAutoRecommendedUsers.size());
+        Assertions.assertNotEquals(beforeAutoRecommendedUsers, afterAutoRecommendedUsers);
+    }
+
     private List<String> getUserNameList(List<AutoRecommendedData> result) {
         System.out.println("getUserNameList : " + result.toString() );
         return result.stream()
