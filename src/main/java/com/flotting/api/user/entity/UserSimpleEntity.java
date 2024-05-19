@@ -73,6 +73,9 @@ public class UserSimpleEntity implements UserDetails {
     @Column(unique = true)
     private String email;
 
+    @Transient
+    private boolean shouldReceiveFourAutoRecommend;
+
     public UserSimpleEntity(UserSimpleRequestDto requestDto , String encodedPassword) {
         this.name = requestDto.getName();
         this.age = requestDto.getAge();
