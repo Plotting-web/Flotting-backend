@@ -2,7 +2,7 @@ name: Dockerizing to Amazon ECR
 
 on:
   push:       # 트리거
-    branches: [ develop ]
+    branches: [ develop-PLOTTING-12 ]
       
 env:
   AWS_REGION: ap-northeast-2        # set this to your preferred AWS region, e.g. us-west-1
