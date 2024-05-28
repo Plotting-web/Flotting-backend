@@ -1,5 +1,6 @@
 package com.flotting.api.user.service;
 
+import com.flotting.api.history.event.AutoRecommendDataPublisher;
 import com.flotting.api.user.entity.PersonalManagerRequesterEntity;
 import com.flotting.api.user.entity.UserDetailEntity;
 import com.flotting.api.user.entity.UserSimpleEntity;
@@ -37,6 +38,7 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final ExcelService excelService;
+    private final AutoRecommendDataPublisher autoRecommendDataPublisher;
 
     @Transactional(readOnly = true)
     public UserSimpleEntity getUserByPhoneNumber(String phoneNumber) {
@@ -233,6 +235,10 @@ public class UserService {
             detailUser.changeStatus(afterStatus);
         }
 
+        //휴면 해제로 업데이트 할 경우, 4개 프로필 추천
+        if(UserStatusEnum.DORMANT.name().equals(beforeStatus) && UserStatusEnum.NORMAL.equals(afterStatus)) {
+            autoRecommendDataPublisher.createData(simpleUserId);
+        }
         log.info("simpleUserId : {}, beforeStatus : {} changedStatus : {}", simpleUserId, beforeStatus, afterStatus.name());
         return new UserResponseDto(simpleUser, detailUser);
     }

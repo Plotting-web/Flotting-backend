@@ -18,11 +18,11 @@ import org.apache.commons.compress.utils.Sets;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,8 +33,6 @@ public class AutoRecommendService {
     private final UserService userService;
     private final AutoRecommendRepository autoRecommendRepository;
     private final MatchingHistoryService matchingHistoryService;
-    private final static int SIGNED_IN_OVER_TWO_WEEKS_SIZE = 4;
-    private final static int SIGNED_IN_M_TWO_WEEKS_SIZE = 2;
 
     @Transactional(readOnly = true)
     public List<AutoRecommendedData> getAccessibleAutoRecommendedProfile(Long receiverId) {
@@ -94,9 +92,6 @@ public class AutoRecommendService {
          * p, d, g
          * p1명일 경우 & d 1명나오는지
          */
-        //TODO : 가입 일자 기준이 1차 프로필 등록 직후 or  2차프로필 등록 직후
-//        boolean isSignedUpUnderTwoWeeks = true;
-
         /**
          * 2명: 한등급 -> 등급 내림차순으로 / 2명 : 동등급 -> 등급 내림차순으로
          * 첫번쿼리 : 한등급 위인거를 지정해서 날리고 2명 미만 나오면째
@@ -120,8 +115,8 @@ public class AutoRecommendService {
         });
 
         boolean isSignedUpOverTwoWeeks = LocalDateTime.now().isAfter(targetDetailUser.getApprovedAt().plusWeeks(2));
-        if(!isSignedUpOverTwoWeeks) {
-            log.info("가입 2주 미만으로 2명 추가 쿼리 ! simpleUser : {}", targetUser.getUserNo());
+        if(targetUser.isShouldReceiveFourAutoRecommend() || !isSignedUpOverTwoWeeks) {
+            log.info("2명 추가 쿼리 ! simpleUser : {}", targetUser.getUserNo());
             GradeEnum targetGrade = GradeEnum.getUpperGrade(targetDetailUser.getGrade());
             result.addAll(getFutureRecommendedUsers(targetGrade, targetUser, exceptIds));
         }
@@ -195,5 +190,12 @@ public class AutoRecommendService {
     public List<AutoRecommendHistory> getAll() {
         return autoRecommendRepository.findAll();
     }
-    
+
+    @Transactional(readOnly = true)
+    public boolean alreadyRecommendedProfileThisWeek(Long userId) {
+        LocalDate now = LocalDate.now();
+        TemporalField fieldISO = WeekFields.of(Locale.KOREA).dayOfWeek();
+        LocalDateTime startDayOfThisWeek = now.with(fieldISO, 2).atStartOfDay();
+        return autoRecommendRepository.existsByReceiver_UserNoAndCreatedAtGreaterThan(userId, startDayOfThisWeek);
+    }
 }
