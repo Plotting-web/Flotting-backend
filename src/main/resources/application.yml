@@ -1,5 +1,5 @@
 server:
-  port: 8003
+  port: 8002
 spring:
   h2:
     console:
@@ -25,3 +25,16 @@ spring:
 logging:
   level:
     root: debug
+
+cloud:
+  aws:
+    s3:
+      bucket: plotting
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+    credentials:
+      access-key: AKIAYS2NTDPZY7PKCPDI
+      secret-key: 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

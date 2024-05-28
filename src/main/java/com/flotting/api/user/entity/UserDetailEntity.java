@@ -140,17 +140,17 @@ public class UserDetailEntity extends BaseEntity {
      * , 로 구
      */
     @ElementCollection
-    @CollectionTable(name = "user_resource_uri_list",
+    @CollectionTable(name = "user_resource_url_list",
             joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "resource_uri")
-    private List<String> profileImageURIs = new ArrayList<>();
+    @Column(name = "resource_url")
+    private List<String> profileImageURLs = new ArrayList<>();
 
     /**
      * 신원 검증 image uri 1
      *
      */
     @Column(length = 1000)
-    private String identityVerificationURI;
+    private String identityVerificationURL;
 
     /**
      * 프로필 등급
@@ -217,7 +217,7 @@ public class UserDetailEntity extends BaseEntity {
         this.education = EducationEnum.of(requestDto.getEducation());
         this.smoking = requestDto.getSmoking();
         this.drinking = DrinkingEnum.of(requestDto.getDrinking());
-        this.identityVerificationURI = requestDto.getIdentityVerificationURI();
+        this.identityVerificationURL = requestDto.getIdentityVerificationURL();
         this.mbti = requestDto.getMbti();
         this.character = requestDto.getCharacter().stream().map(CharacterEnum::of).collect(Collectors.toList());
         this.preferredDate = requestDto.getPreferredDate();
@@ -225,7 +225,8 @@ public class UserDetailEntity extends BaseEntity {
         this.lifeStyle = requestDto.getLifeStyle();
         this.somethingWantToSay = requestDto.getSomethingWantToSay();
         this.birthday = requestDto.getBirthday();
-        this.profileImageURIs = requestDto.getProfileImageURIs();
+        this.profileImageURLs = requestDto.getProfileImageURLs();
+        this.userStatus = Objects.nonNull(requestDto.getUserStatus()) ? UserStatusEnum.of(requestDto.getUserStatus()) : UserStatusEnum.INPROGRESS;
         this.detailLocation = requestDto.getDetailLocation();
         this.birthYear = getBirthYear(requestDto.getBirthday());
         this.userStatus = UserStatusEnum.INPROGRESS;
@@ -244,7 +245,7 @@ public class UserDetailEntity extends BaseEntity {
         this.education = EducationEnum.of(requestDto.getEducation());
         this.smoking = requestDto.getSmoking();
         this.drinking = DrinkingEnum.of(requestDto.getDrinking());
-        this.identityVerificationURI = requestDto.getIdentityVerificationURI();
+        this.identityVerificationURL = requestDto.getIdentityVerificationURL();
         this.mbti = requestDto.getMbti();
         this.character = requestDto.getCharacter().stream().map(CharacterEnum::of).collect(Collectors.toList());
         this.preferredDate = requestDto.getPreferredDate();
@@ -252,10 +253,16 @@ public class UserDetailEntity extends BaseEntity {
         this.lifeStyle = requestDto.getLifeStyle();
         this.somethingWantToSay = requestDto.getSomethingWantToSay();
         this.birthday = requestDto.getBirthday();
-        this.profileImageURIs = requestDto.getProfileImageURIs();
+        this.profileImageURLs = requestDto.getProfileImageURLs();
         this.detailLocation = requestDto.getDetailLocation();
         this.birthYear = getBirthYear(requestDto.getBirthday());
         this.userStatus = Objects.nonNull(requestDto.getUserStatus()) ? UserStatusEnum.of(requestDto.getUserStatus()) : UserStatusEnum.INPROGRESS;
+        return this;
+    }
+
+    public UserDetailEntity updateImageUrl(List<String> imageUrl) {
+        this.profileImageURLs.clear();
+        this.profileImageURLs.addAll(imageUrl);
         return this;
     }
 

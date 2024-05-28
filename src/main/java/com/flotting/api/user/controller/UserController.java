@@ -13,10 +13,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.*;
 import java.util.List;
 
 @RestController
@@ -39,17 +42,17 @@ public class UserController {
     @Parameter(name = "userFilterRequestDto", description = "성별, 흡연여부, 회원상태, 등급, 거주지, 신청경로, 승인매니저id, 승인일자, 키, 나이")
     @ApiResponse(responseCode = "200", description = "user조회 성공", content = @Content(schema = @Schema(implementation = UserResponseDto.class)))
     @GetMapping("/filter")
-    public List<UserResponseDto> getUsersByFilter( @RequestBody UserFilterRequestDto userFilterRequestDto,
-                                                   @PageableDefault(size = 15) Pageable pageable) {
-        return userService.getUsersByFilter( userFilterRequestDto, pageable);
+    public List<UserResponseDto> getUsersByFilter(@RequestBody UserFilterRequestDto userFilterRequestDto,
+                                                  @PageableDefault(size = 15) Pageable pageable) {
+        return userService.getUsersByFilter(userFilterRequestDto, pageable);
     }
 
     @Operation(summary = "유저 회원가입", description = "pass 회원가입 로직을 적용하기 전 테스트용으로 만들어 놓은 회원가입 로직입니다.")
     @Parameter(name = "userSimpleRequestDto", description = "requestParam : 이, 패스워드 , 나이 , 휴대폰번호, 직업")
     @ApiResponse(responseCode = "200", description = "회원가입 성공", content = @Content(schema = @Schema(implementation = UserSimpleResponseDto.class)))
     @PostMapping("/signin")
-    public UserSimpleResponseDto singin( @RequestBody UserSimpleRequestDto userSimpleRequestDto) {
-        return userService.saveSimpleUserInfo( userSimpleRequestDto);
+    public UserSimpleResponseDto singin(@RequestBody UserSimpleRequestDto userSimpleRequestDto) {
+        return userService.saveSimpleUserInfo(userSimpleRequestDto);
     }
 
     @Operation(summary = "1차 프로필 조회", description = "1차 프로필 전체 user조회")
@@ -71,7 +74,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "user조회 성공", content = @Content(schema = @Schema(implementation = UserSimpleResponseDto.class)))
     @GetMapping("/simple-info/{userId}")
     public UserSimpleResponseDto getSimpleUserInfo(
-                                               @PathVariable(name = "userId") Long userId) {
+            @PathVariable(name = "userId") Long userId) {
         return userService.getSimpleUserDto(userId);
     }
 
@@ -88,29 +91,43 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "user저장 성공", content = @Content(schema = @Schema(implementation = UserSimpleResponseDto.class)))
     @PostMapping("/simple-info")
     public UserSimpleResponseDto registerSimpleUserInfo(
-                                                        @RequestBody UserSimpleRequestDto userSimpleRequestDto) {
-        return userService.saveSimpleUserInfo( userSimpleRequestDto);
+            @RequestBody UserSimpleRequestDto userSimpleRequestDto) {
+        return userService.saveSimpleUserInfo(userSimpleRequestDto);
     }
 
-    @Operation(summary = "2차 프로필 user등록", description = "2차 프로필 등록")
+    @Operation(summary = "2차 프로필 user 등록", description = "2차 프로필 등록")
     @Parameter(name = "userDetailRequestDto", description = "userDetailRequestDto : 2차 프로필 정보")
     @Parameter(name = "userId", description = "1차 프로필 userNo")
     @ApiResponse(responseCode = "200", description = "user저장 성공", content = @Content(schema = @Schema(implementation = UserDetailResponseDto.class)))
     @PostMapping("/detail-info")
     public UserResponseDto registerDetailUserInfo(
-                                                        @RequestBody UserDetailRequestDto userDetailRequestDto,
-                                                        @RequestParam(name = "userId") Long targetUserId) {
-        return userService.saveDetailUserInfo( targetUserId, userDetailRequestDto);
+            @RequestBody UserDetailRequestDto userDetailRequestDto,
+            @RequestParam(name = "userId") Long targetUserId) {
+        return userService.saveDetailUserInfo(targetUserId, userDetailRequestDto);
     }
 
+    @Operation(summary = "2차 프로필 user 사진 등록 ", description = "2차 프로필 사진 등록")
+    @Parameter(name = "files", description = "2차 프로필 사진 정보")
+    @Parameter(name = "userId", description = "1차 프로필 userNo")
+    @ApiResponse(responseCode = "200", description = "user 사진 저장 성공", content = @Content(schema = @Schema(implementation = UserDetailResponseDto.class)))
+    @PostMapping(value = "/upload-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public UserResponseDto uploadUserImages(
+            @RequestPart(value = "files", required = false) List<MultipartFile> files,
+            @RequestParam(name = "userId") Long targetUserId
+    ) {
+        return userService.saveUserImages(targetUserId, files);
+    }
+
+    //
+    //    @PostMapping(value = "/detail-info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "1차 프로필 user수정", description = "1차 프로필 이름, 나이, 전화번호, 직업 수정")
     @Parameter(name = "userSimpleRequestDto", description = "userSimpleRequestDto : 이름, 나이, 전화번호, 직업")
     @ApiResponse(responseCode = "200", description = "user수정 성공", content = @Content(schema = @Schema(implementation = UserSimpleResponseDto.class)))
     @PutMapping("/simple/{userId}")
     public UserSimpleResponseDto updateSimpleUserInfo(
-                                                      @RequestBody UserSimpleRequestDto userSimpleRequestDto,
-                                                      @PathVariable(name = "userId") Long targetUserId) {
-        return userService.updateSimpleUserInfo( targetUserId, userSimpleRequestDto);
+            @RequestBody UserSimpleRequestDto userSimpleRequestDto,
+            @PathVariable(name = "userId") Long targetUserId) {
+        return userService.updateSimpleUserInfo(targetUserId, userSimpleRequestDto);
     }
 
     @Operation(summary = "2차 프로필 user수정", description = "성별, 체형, 신장, 휴면, 거주지, 나이, 등급, 직업, 흡연 필터링")
@@ -118,9 +135,9 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "user수정 성공", content = @Content(schema = @Schema(implementation = UserDetailResponseDto.class)))
     @PutMapping("/detail/{userId}")
     public UserDetailResponseDto updateDetailUserInfo(
-                                                  @RequestBody UserDetailRequestDto userDetailRequestDto,
-                                                  @PathVariable(name = "userId") Long targetUserId) {
-        return userService.updateDetailUserInfo( targetUserId, userDetailRequestDto);
+            @RequestBody UserDetailRequestDto userDetailRequestDto,
+            @PathVariable(name = "userId") Long targetUserId) {
+        return userService.updateDetailUserInfo(targetUserId, userDetailRequestDto);
     }
 
     @PostMapping("/excel/download")
@@ -134,7 +151,7 @@ public class UserController {
     }
 
     @GetMapping("/personal-requester/{userId}")
-    public PersonalRequesterResponseDto getPersonalRequester(@PathVariable(name = "userId")Long requesterId) {
+    public PersonalRequesterResponseDto getPersonalRequester(@PathVariable(name = "userId") Long requesterId) {
         return userService.getPersonalRequester(requesterId);
     }
 

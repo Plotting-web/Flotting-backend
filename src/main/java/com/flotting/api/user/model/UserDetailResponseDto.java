@@ -65,8 +65,8 @@ public class UserDetailResponseDto {
             allowableValues = {"THREE_WEEK", "TWO_WEEK", "ONE_WEEK", "ZERO_WEEK"})
     private String drinking;
 
-    @Schema(description =  "신원 검증 image uri", example = "xcvbnm")
-    private String identityVerificationURI;
+    @Schema(description =  "신원 검증 image url", example = "xcvbnm")
+    private String identityVerificationURL;
 
     @Schema(description = "mbti", example = "isfp")
     private String mbti;
@@ -94,7 +94,7 @@ public class UserDetailResponseDto {
     private String birthday;
 
     @Schema(description = "사진경로", example = "[\"asdfgh\"]")
-    private List<String> profileImageURIs;
+    private List<String> profileImageURLs;
 
     @Schema(description = "계정상태", example = "INPROGRESS",
             allowableValues = { "NONE","INPROGRESS", "REJECT",
@@ -131,7 +131,7 @@ public class UserDetailResponseDto {
         this.grade = Objects.nonNull(user.getGrade()) ? user.getGrade().name() : null;
         this.height = user.getHeight();
         this.hobby = user.getHobby().stream().map(HobbyEnum::name).collect(Collectors.toList());
-        this.identityVerificationURI = user.getIdentityVerificationURI();
+        this.identityVerificationURL = user.getIdentityVerificationURL();
         this.location = user.getLocation().name();
         this.nickName = user.getNickName();
         this.gender = user.getGender().name();

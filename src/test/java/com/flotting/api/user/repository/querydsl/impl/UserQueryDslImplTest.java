@@ -60,7 +60,7 @@ class UserQueryDslImplTest extends SampleDataMaker {
                 .path(AppliedPathEnum.ETC.name())
                 .gender(GenderEnum.F.name())
                 .recommendUserName("abc")
-                .URI("uri").build();
+                .URL("url").build();
 
         //when
         UserResponseDto userResponseDto = userService.saveDetailUserInfo(userSimpleResponseDto.getUserNo(), requestDto);
@@ -115,7 +115,7 @@ class UserQueryDslImplTest extends SampleDataMaker {
         UserFilterRequestDto userFilterRequestDto = new UserFilterRequestDto();
         List<String> body = List.of(BodyEnum.NORMAL.name(), BodyEnum.RELIABLE.name());
         Pageable unpaged = Pageable.unpaged();
-        List<UserResponseDto> users = userService.getUsersByFilter(userFilterRequestDto,unpaged);
+        List<UserResponseDto> users = userService.getUsersByFilter(userFilterRequestDto, unpaged);
 
         //then
         Assertions.assertThat(users.size()).isEqualTo(1);

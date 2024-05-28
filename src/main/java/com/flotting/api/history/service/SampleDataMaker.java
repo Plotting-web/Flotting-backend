@@ -1,5 +1,6 @@
 package com.flotting.api.history.service;
 
+import com.flotting.api.history.entity.AutoRecommendHistory;
 import com.flotting.api.manager.model.ApproveRequestDto;
 import com.flotting.api.manager.service.ManagerService;
 import com.flotting.api.user.enums.*;
@@ -7,9 +8,11 @@ import com.flotting.api.user.model.*;
 import com.flotting.api.user.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -29,6 +32,9 @@ public class SampleDataMaker {
 
     @Autowired
     private ManagerService managerService;
+
+    @Autowired
+    private AutoRecommendService autoRecommendService;
 
     public List<UserResponseDto> makeUserData(boolean isCSVFile) throws ParseException {
         managerService.makeSampleData();
@@ -78,7 +84,7 @@ public class SampleDataMaker {
                     .path(AppliedPathEnum.byValue(array[7]).name())
                     .gender("여성".equals(array[3]) ? GenderEnum.F.name() : GenderEnum.M.name())
                     .recommendUserName(array[8])
-                    .URI("")
+                    .URL("")
 //                    .approvedAt(LocalDateTime.parse(array[23] + " 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                     .mbti(array[9])
                     .character(List.of(CharacterEnum.byValue(array[24]).name()))

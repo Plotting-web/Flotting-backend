@@ -55,7 +55,7 @@ public class QUserDetailEntity extends EntityPathBase<UserDetailEntity> {
 
     public final ListPath<com.flotting.api.user.enums.HobbyEnum, EnumPath<com.flotting.api.user.enums.HobbyEnum>> hobby = this.<com.flotting.api.user.enums.HobbyEnum, EnumPath<com.flotting.api.user.enums.HobbyEnum>>createList("hobby", com.flotting.api.user.enums.HobbyEnum.class, EnumPath.class, PathInits.DIRECT2);
 
-    public final StringPath identityVerificationURI = createString("identityVerificationURI");
+    public final StringPath identityVerificationURL = createString("identityVerificationURL");
 
     public final EnumPath<com.flotting.api.user.enums.JobEnum> job = createEnum("job", com.flotting.api.user.enums.JobEnum.class);
 
@@ -73,7 +73,7 @@ public class QUserDetailEntity extends EntityPathBase<UserDetailEntity> {
 
     public final StringPath preferredDate = createString("preferredDate");
 
-    public final ListPath<String, StringPath> profileImageURIs = this.<String, StringPath>createList("profileImageURIs", String.class, StringPath.class, PathInits.DIRECT2);
+    public final ListPath<String, StringPath> profileImageURLs = this.<String, StringPath>createList("profileImageURLs", String.class, StringPath.class, PathInits.DIRECT2);
 
     public final StringPath recommendUserName = createString("recommendUserName");
 
