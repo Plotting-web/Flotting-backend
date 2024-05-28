@@ -1,6 +1,7 @@
 package com.flotting.api.user.service;
 
 import com.flotting.api.history.event.AutoRecommendDataPublisher;
+import com.flotting.api.aws.service.S3Service;
 import com.flotting.api.user.entity.PersonalManagerRequesterEntity;
 import com.flotting.api.user.entity.UserDetailEntity;
 import com.flotting.api.user.entity.UserSimpleEntity;
@@ -19,8 +20,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,6 +41,7 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final ExcelService excelService;
+    private final S3Service s3Service;
     private final AutoRecommendDataPublisher autoRecommendDataPublisher;
 
     @Transactional(readOnly = true)
@@ -133,6 +137,28 @@ public class UserService {
         log.info("저장결과 1차 프로필 userId : {} 2차 프로필 userId : {}", simpleUser.getUserNo(), savedDetailUser.getSeq());
         return new UserResponseDto(simpleUser, savedDetailUser);
     }
+
+    @Transactional
+    public UserResponseDto saveUserImages(Long targetUserId, List<MultipartFile> file) {
+        List<String> imageUrls = new ArrayList<>();
+        try {
+            if (file == null) throw new RuntimeException("File does not exist");
+            imageUrls = s3Service.s3Upload(file, String.valueOf(targetUserId));
+
+            UserSimpleEntity simpleUser = getSimpleUser(targetUserId);
+            UserDetailEntity userDetailEntity = simpleUser.getUserDetailEntity().updateImageUrl(imageUrls);
+
+            userDetailRepository.save(userDetailEntity);
+
+            log.info("savedEntity user  images : {}", userDetailEntity);
+            return new UserResponseDto(simpleUser, userDetailEntity);
+        } catch (Exception e) {
+            imageUrls.forEach(s3Service::s3Delete);
+            throw new RuntimeException(e);
+        }
+
+    }
+
 
     /**
      * 2차 프로필 수정

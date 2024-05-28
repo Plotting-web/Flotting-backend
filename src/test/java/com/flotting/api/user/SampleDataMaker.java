@@ -79,7 +79,7 @@ public class SampleDataMaker {
                     .path(AppliedPathEnum.byValue(array[7]).name())
                     .gender("여성".equals(array[3]) ? GenderEnum.F.name() : GenderEnum.M.name())
                     .recommendUserName(array[8])
-                    .URI("")
+                    .URL("")
 //                    .approvedAt(LocalDateTime.parse(array[23] + " 00:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                     .mbti(array[9])
                     .character(List.of(CharacterEnum.byValue(array[24]).name()))

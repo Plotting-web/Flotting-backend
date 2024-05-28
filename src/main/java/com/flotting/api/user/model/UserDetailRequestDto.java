@@ -58,8 +58,8 @@ public class UserDetailRequestDto {
             allowableValues = {"THREE_WEEK", "TWO_WEEK", "ONE_WEEK", "ZERO_WEEK"})
     private String drinking;
 
-    @Schema(description =  "신원 검증 image uri", example = "xcvbnm")
-    private String identityVerificationURI;
+    @Schema(description =  "신원 검증 image url", example = "xcvbnm")
+    private String identityVerificationURL;
 
     @Schema(description = "mbti", example = "isfp")
     private String mbti;
@@ -87,7 +87,7 @@ public class UserDetailRequestDto {
     private String birthday;
 
     @Schema(description = "사진경로", example = "[\"asdfgh\"]")
-    private List<String> profileImageURIs;
+    private List<String> profileImageURLs;
 
     @Schema(description = "계정상태", example = "INPROGRESS",
             allowableValues = { "NONE","INPROGRESS", "REJECT",
@@ -100,8 +100,8 @@ public class UserDetailRequestDto {
     @Builder
     public UserDetailRequestDto(String path, String detailJob, String lifeStyle, String somethingWantToSay,
                                 String drinking, String education, String email, String job,
-                                Integer height, List<String> hobby, String URI, String location,
-                                List<String> character, String nickName, String preferredDate, List<String> profileImageURIs,
+                                Integer height, List<String> hobby, String URL, String location,
+                                List<String> character, String nickName, String preferredDate, List<String> profileImageURLs,
                                 String gender, Boolean smoking, String recommendUserName,
                                 String mbti, String userStatus, String detailLocation, String birthday) {
         this.appliedPath = path;
@@ -114,7 +114,7 @@ public class UserDetailRequestDto {
 //        this.grade = grade;
         this.height = height;
         this.hobby = hobby;
-        this.identityVerificationURI = URI;
+        this.identityVerificationURL = URL;
         this.location = location;
         this.character = character;
         this.nickName = nickName;
@@ -124,7 +124,7 @@ public class UserDetailRequestDto {
         this.mbti = mbti;
         this.userStatus = userStatus;
         this.preferredDate = preferredDate;
-        this.profileImageURIs = profileImageURIs;
+        this.profileImageURLs = profileImageURLs;
 //        this.managerId = getManagerId();
         this.preferredDate = getPreferredDate();
         this.job = job;

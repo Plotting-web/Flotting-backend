@@ -90,8 +90,8 @@ public class UserResponseDto {
             allowableValues = {"THREE_WEEK", "TWO_WEEK", "ONE_WEEK", "ZERO_WEEK"})
     private String drinking;
 
-    @Schema(description =  "신원 검증 image uri", example = "file://~")
-    private String identityVerificationURI;
+    @Schema(description =  "신원 검증 image url", example = "file://~")
+    private String identityVerificationURL;
 
     @Schema(description = "등급", example = "G", allowableValues = {"G", "D", "P"})
     private String grade;
@@ -123,7 +123,7 @@ public class UserResponseDto {
     private String birthday;
 
     @Schema(description = "사진경로", example = "file://~")
-    private List<String> profileImageURIs;
+    private List<String> profileImageURLs;
 
     @Schema(description = "거절사유")
     private String rejectedReason;
@@ -199,7 +199,7 @@ public class UserResponseDto {
         this.preferredDate = preferredDate;
         this.somethingWantToSay = somethingWantToSay;
         this.birthday = birthday;
-        this.profileImageURIs = profileImageURIs;
+        this.profileImageURLs = profileImageURLs;
         this.rejectedReason = rejectedReason;
     }
 
@@ -218,7 +218,8 @@ public class UserResponseDto {
             this.grade = Objects.nonNull(userDetailEntity.getGrade()) ? userDetailEntity.getGrade().name() : null;
             this.height = userDetailEntity.getHeight();
             this.hobby = userDetailEntity.getHobby().stream().map(HobbyEnum::name).collect(Collectors.toList());
-            this.identityVerificationURI = userDetailEntity.getIdentityVerificationURI();
+            this.profileImageURLs = userDetailEntity.getProfileImageURLs();
+            this.identityVerificationURL = userDetailEntity.getIdentityVerificationURL();
             this.location = Objects.nonNull(userDetailEntity.getLocation()) ? userDetailEntity.getLocation().name() : null;
             this.nickName = userDetailEntity.getNickName();
             this.gender = Objects.nonNull(userDetailEntity.getGender()) ? userDetailEntity.getGender().name() : null;
