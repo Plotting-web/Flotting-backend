@@ -39,6 +39,6 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
-        docker  build --platform linux/amd64 --tag public.ecr.aws/o5s3g1r4/plotting-api:latest .
-        docker push public.ecr.aws/o5s3g1r4/plotting-api:latest
+        docker  build --platform linux/amd64 --tag 590183865331.dkr.ecr.ap-northeast-2.amazonaws.com/plotting-api:latest .
+        docker push 590183865331.dkr.ecr.ap-northeast-2.amazonaws.com/plotting-api:latest
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
